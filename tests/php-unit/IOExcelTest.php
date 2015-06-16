@@ -35,8 +35,13 @@ class CommonCodeTest extends PHPUnit_Framework_TestCase
         $this->setArrayToExcel([
             'contentArray'  => [
                 [
-                    'First Column'  => 10,
-                    'Second Column' => 20,
+                    'First Column'             => 10,
+                    'Second Column'            => 20,
+                    'Third Column'             => 30,
+                    'Large Text Column'        => 'This is a very large text column content and should be wrapped',
+                    'Zero Column as Blank'     => '0',
+                    'Timestamp Column'         => '15:00:00',
+                    'Timestamp Shorter Column' => '1:00:00',
                 ]
             ],
             'filename'      => 'C:/Windows/Temp/test.xls',

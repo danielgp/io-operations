@@ -69,9 +69,7 @@ trait IOExcel
     {
         $checkInputs = $this->checkInputFeatures($inFeatures);
         if (!is_null($checkInputs)) {
-            echo '<hr/>';
-            echo $checkInputs;
-            echo '<hr/>';
+            echo '<hr/>' . $checkInputs . '<hr/>';
             return '';
         }
         $xlFileName  = str_replace('.xls', '', $inFeatures['filename']) . '.xlsx';
@@ -84,66 +82,18 @@ trait IOExcel
         if (is_array($inFeatures['contentArray'])) {
             $counter = 0;
             foreach ($inFeatures['contentArray'] as $key => $value) {
-                $columnCounter = 0;
-                if ($counter == 0) { // headers
-                    foreach ($value as $key2 => $value2) {
-                        $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension($crCol)->setAutoSize(true);
-                        $crtCellAddress = $crCol . '1';
-                        $objPHPExcel->getActiveSheet()->SetCellValue($crtCellAddress, $key2);
-                        $objPHPExcel->getActiveSheet()->getStyle($crCol . '1')->getFill()->applyFromArray([
-                            'type'       => 'solid',
-                            'startcolor' => ['rgb' => 'CCCCCC'],
-                            'endcolor'   => ['rgb' => 'CCCCCC'],
-                        ]);
-                        $objPHPExcel->getActiveSheet()->getStyle($crCol . '1')->applyFromArray([
-                            'font' => [
-                                'bold'  => true,
-                                'color' => ['rgb' => '000000'],
-                            ]
-                        ]);
-                        $columnCounter += 1;
-                    }
-                    $objPHPExcel->getActiveSheet()->calculateColumnWidths();
-                    $counter += 1;
+                if ($key == 0) { // headers
+                    $this->setExcelCellHeader($objPHPExcel, array_keys($value));
+                    $columnCounter = count($value) - 1;
+                    $crCol         = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
                 }
-                $columnCounter = 0;
-                foreach ($value as $key2 => $value2) {
-                    if (strlen($value2) > 50) {
-                        $objPHPExcel->getActiveSheet()->getStyle($crtCellAddress)->getAlignment()->setWrapText(true);
-                    }
-                    if ($counter == 1) {
-                        $objPHPExcel->getActiveSheet()->getColumnDimension($crCol)->setAutoSize(false);
-                    }
-                    $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
-                    $crtCellAddress = $crCol . ($counter + 1);
-                    if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
-                        $value2 = '';
-                    }
-                    if ((strlen($value2) == 8) && (strpos($value2, ':') !== false)) {
-                        if ($value2 == '') {
-                            $calculated_time_as_number = 0;
-                        } else {
-                            $calculated_time_as_number = $this->LocalTime2Seconds($value2) / 60 / 60 / 24;
-                        }
-                        $objPHPExcel->getActiveSheet()->SetCellValue($crtCellAddress, $calculated_time_as_number);
-                        $objPHPExcel
-                                ->getActiveSheet()
-                                ->getStyle($crtCellAddress)
-                                ->getNumberFormat()
-                                ->setFormatCode('[h]:mm:ss;@');
-                    } else {
-                        $objPHPExcel->getActiveSheet()->SetCellValue($crtCellAddress, strip_tags($value2));
-                    }
-                    $columnCounter += 1;
-                }
-                $counter += 1;
+                $this->setExcelCellContent($objPHPExcel, ($key + 1), $value);
             }
             $objPHPExcel->setActiveSheetIndex(0);
             $objPHPExcel->getActiveSheet()->setTitle($inFeatures['worksheetname']);
-            $this->setExcelWorksheetLayout($objPHPExcel, $crCol, $counter);
+            $this->setExcelWorksheetLayout($objPHPExcel, $crCol, count($inFeatures['contentArray']));
             if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
-                // output the created content to the browser
+                // output the created content to the browser and skip-it otherwise
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 header('Pragma: private');
                 header('Cache-control: private, must-revalidate');
@@ -190,6 +140,62 @@ trait IOExcel
         return $_indexCache[$pColIndex];
     }
 
+    private function setExcelCellContent(\PHPExcel $objPHPExcel, $counter, $value)
+    {
+        $columnCounter = 0;
+        foreach ($value as $value2) {
+            $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $crtCellAddress = $crCol . ($counter + 1);
+            if (strlen($value2) > 50) {
+                $objPHPExcel->getActiveSheet()->getStyle($crtCellAddress)->getAlignment()->setWrapText(true);
+            }
+            if ($counter == 1) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($crCol)->setAutoSize(false);
+            }
+            if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
+                $value2 = '';
+            } elseif ((strlen($value2) == 8) && (strpos($value2, ':') !== false)) {
+                $objPHPExcel
+                        ->getActiveSheet()
+                        ->SetCellValue($crtCellAddress, ($this->setLocalTime2Seconds($value2) / 60 / 60 / 24));
+                $objPHPExcel
+                        ->getActiveSheet()
+                        ->getStyle($crtCellAddress)
+                        ->getNumberFormat()
+                        ->setFormatCode('[H]:mm:ss;@');
+            } else {
+                $objPHPExcel
+                        ->getActiveSheet()
+                        ->SetCellValue($crtCellAddress, strip_tags($value2));
+            }
+            $columnCounter += 1;
+        }
+    }
+
+    private function setExcelCellHeader(\PHPExcel $objPHPExcel, $value)
+    {
+        $columnCounter = 0;
+        foreach ($value as $value2) {
+            $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($crCol)->setAutoSize(true);
+            $crtCellAddress = $crCol . '1';
+            $objPHPExcel->getActiveSheet()->SetCellValue($crtCellAddress, $value2);
+            $objPHPExcel->getActiveSheet()->getStyle($crCol . '1')->getFill()->applyFromArray([
+                'type'       => 'solid',
+                'startcolor' => ['rgb' => 'CCCCCC'],
+                'endcolor'   => ['rgb' => 'CCCCCC'],
+            ]);
+            $objPHPExcel->getActiveSheet()->getStyle($crCol . '1')->applyFromArray([
+                'font' => [
+                    'bold'  => true,
+                    'color' => ['rgb' => '000000'],
+                ]
+            ]);
+            $columnCounter += 1;
+        }
+        $objPHPExcel->getActiveSheet()->calculateColumnWidths();
+    }
+
     private function setExcelProperties(\PHPExcel $objPHPExcel, $inProperties)
     {
         if (isset($inProperties)) {
@@ -219,7 +225,7 @@ trait IOExcel
         // freeze 1st top row
         $objPHPExcel->getActiveSheet()->freezePane('A2');
         // activate AutoFilter
-        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:' . $crCol . ($counter - 1));
+        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:' . $crCol . $counter);
         // margin is set in inches (0.7cm)
         $margin = 0.7 / 2.54;
         $objPHPExcel->getActiveSheet()->getPageMargins()->setHeader($margin);
@@ -233,5 +239,23 @@ trait IOExcel
         $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
         // activate printing of gridlines
         $objPHPExcel->getActiveSheet()->setPrintGridlines(true);
+    }
+
+    private function setLocalTime2Seconds($RSQLtime)
+    {
+        $sign = '';
+        if (is_null($RSQLtime) || ($RSQLtime == '')) {
+            $RSQLtime = '00:00:00';
+        } elseif (substr($RSQLtime, 0, 1) == '-') {
+            //extract negative sign and keep it separatly until ending
+            $RSQLtime = substr($RSQLtime, 1, strlen($RSQLtime) - 1);
+            $sign     = '-';
+        }
+        $resultParts = [
+            'seconds' => substr($RSQLtime, -2),
+            'minutes' => substr($RSQLtime, -5, 2) * 60,
+            'hours'   => substr($RSQLtime, 0, strlen($RSQLtime) - 6) * 60 * 60,
+        ];
+        return $sign . implode('', array_values($resultParts));
     }
 }
