@@ -1,0 +1,30 @@
+{
+    "name": "danielgp/io-excel",
+    "description": "Wrapper to Import from Excel into PHP Array and Export from PHP Array Into Excel using PHPExcel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name":     "Daniel Popiniuc",
+            "email":    "danielpopiniuc@gmail.com",
+            "role":     "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "phpoffice/phpexcel": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "source/IOExcel.php"
+        ]
+    },
+    "minimum-stability": "stable",
+    "prefer-stable":    true,
+    "archive": {
+        "exclude": ["/nbproject", "/vendor", "/tests"]
+    }
+}
