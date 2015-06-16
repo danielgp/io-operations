@@ -36,6 +36,30 @@ namespace danielgp\IOExcel;
 trait IOExcel
 {
 
+    private function checkInputFeatures($inFeatures)
+    {
+        if (is_array($inFeatures)) {
+            if (isset($inFeatures['filename'])) {
+                if (is_string($inFeatures['filename'])) {
+                    $inFeatures['filename'] = filter_var($inFeatures['filename'], FILTER_SANITIZE_STRING);
+                } else {
+                    return 'Provided filename is not a string!';
+                }
+            } else {
+                return 'No filename provided';
+            }
+            if (!isset($inFeatures['worksheetname'])) {
+                $inFeatures['worksheetname'] = 'Worksheet1';
+            }
+            if (!is_array($inFeatures['contentArray'])) {
+                return 'No content!';
+            }
+        } else {
+            return 'Missing parameters!';
+        }
+        return null;
+    }
+
     /**
      * Generate an Excel file from a given array
      *
@@ -43,6 +67,13 @@ trait IOExcel
      */
     protected function setArrayToExcel($inFeatures)
     {
+        $checkInputs = $this->checkInputFeatures($inFeatures);
+        if (!is_null($checkInputs)) {
+            echo '<hr/>';
+            echo $checkInputs;
+            echo '<hr/>';
+            exit(0);
+        }
         if (is_array($inFeatures)) {
             if (isset($inFeatures['filename'])) {
                 if (is_string($inFeatures['filename'])) {
@@ -66,23 +97,7 @@ trait IOExcel
         // Create an instance
         $objPHPExcel = new \PHPExcel();
         // Set properties
-        if (isset($inFeatures['properties'])) {
-            if (isset($inFeatures['properties']['Creator'])) {
-                $objPHPExcel->getProperties()->setCreator($inFeatures['properties']['Creator']);
-            }
-            if (isset($inFeatures['properties']['LastModifiedBy'])) {
-                $objPHPExcel->getProperties()->setLastModifiedBy($inFeatures['properties']['LastModifiedBy']);
-            }
-            if (isset($inFeatures['properties']['description'])) {
-                $objPHPExcel->getProperties()->setDescription($inFeatures['properties']['description']);
-            }
-            if (isset($inFeatures['properties']['subject'])) {
-                $objPHPExcel->getProperties()->setSubject($inFeatures['properties']['subject']);
-            }
-            if (isset($inFeatures['properties']['title'])) {
-                $objPHPExcel->getProperties()->setTitle($inFeatures['properties']['title']);
-            }
-        }
+        $this->setExcelProperties($objPHPExcel, $inFeatures['properties']);
         // Add a worksheet to the file, returning an object to add data to
         $objPHPExcel->setActiveSheetIndex(0);
         if (is_array($inFeatures['contentArray'])) {
@@ -145,26 +160,7 @@ trait IOExcel
             }
             $objPHPExcel->setActiveSheetIndex(0);
             $objPHPExcel->getActiveSheet()->setTitle($inFeatures['worksheetname']);
-            $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
-            //coresponding to A4
-            $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9);
-            // freeze 1st top row
-            $objPHPExcel->getActiveSheet()->freezePane('A2');
-            // activate AutoFilter
-            $objPHPExcel->getActiveSheet()->setAutoFilter('A1:' . $crCol . ($counter - 1));
-            // margin is set in inches (0.7cm)
-            $margin = 0.7 / 2.54;
-            $objPHPExcel->getActiveSheet()->getPageMargins()->setHeader($margin);
-            $objPHPExcel->getActiveSheet()->getPageMargins()->setTop($margin * 2);
-            $objPHPExcel->getActiveSheet()->getPageMargins()->setBottom($margin);
-            $objPHPExcel->getActiveSheet()->getPageMargins()->setLeft($margin);
-            $objPHPExcel->getActiveSheet()->getPageMargins()->setRight($margin);
-            // add header content
-            $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&L&F&RPage &P / &N');
-            // repeat coloumn headings for every new page...
-            $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
-            // activate printing of gridlines
-            $objPHPExcel->getActiveSheet()->setPrintGridlines(true);
+            $this->setExcelWorksheetLayout($objPHPExcel, $crCol, $counter);
             if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
                 // output the created content to the browser
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -211,5 +207,50 @@ trait IOExcel
             }
         }
         return $_indexCache[$pColIndex];
+    }
+
+    private function setExcelProperties($objPHPExcel, $inProperties)
+    {
+        if (isset($inProperties)) {
+            if (isset($inProperties['Creator'])) {
+                $objPHPExcel->getProperties()->setCreator($inProperties['Creator']);
+            }
+            if (isset($inProperties['LastModifiedBy'])) {
+                $objPHPExcel->getProperties()->setLastModifiedBy($inProperties['LastModifiedBy']);
+            }
+            if (isset($inProperties['description'])) {
+                $objPHPExcel->getProperties()->setDescription($inProperties['description']);
+            }
+            if (isset($inProperties['subject'])) {
+                $objPHPExcel->getProperties()->setSubject($inProperties['subject']);
+            }
+            if (isset($inProperties['title'])) {
+                $objPHPExcel->getProperties()->setTitle($inProperties['title']);
+            }
+        }
+    }
+
+    private function setExcelWorksheetLayout($objPHPExcel, $crCol, $counter)
+    {
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
+        //coresponding to A4
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9);
+        // freeze 1st top row
+        $objPHPExcel->getActiveSheet()->freezePane('A2');
+        // activate AutoFilter
+        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:' . $crCol . ($counter - 1));
+        // margin is set in inches (0.7cm)
+        $margin = 0.7 / 2.54;
+        $objPHPExcel->getActiveSheet()->getPageMargins()->setHeader($margin);
+        $objPHPExcel->getActiveSheet()->getPageMargins()->setTop($margin * 2);
+        $objPHPExcel->getActiveSheet()->getPageMargins()->setBottom($margin);
+        $objPHPExcel->getActiveSheet()->getPageMargins()->setLeft($margin);
+        $objPHPExcel->getActiveSheet()->getPageMargins()->setRight($margin);
+        // add header content
+        $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&L&F&RPage &P / &N');
+        // repeat coloumn headings for every new page...
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
+        // activate printing of gridlines
+        $objPHPExcel->getActiveSheet()->setPrintGridlines(true);
     }
 }
