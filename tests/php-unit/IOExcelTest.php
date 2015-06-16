@@ -33,14 +33,15 @@ class CommonCodeTest extends PHPUnit_Framework_TestCase
     public function testSetArrayToExcel()
     {
         $this->setArrayToExcel([
-            'contentArray' => [
+            'contentArray'  => [
                 [
                     'First Column'  => 10,
                     'Second Column' => 20,
                 ]
             ],
-            'filename'     => 'C:/Windows/Temp/test.xls',
-            'properties'   => [
+            'filename'      => 'C:/Windows/Temp/test.xls',
+            'worksheetname' => 'Worksheet1',
+            'properties'    => [
                 'Creator'        => 'PHPunit test',
                 'LastModifiedBy' => 'PHPunit test',
                 'description'    => 'PHPunit test description',

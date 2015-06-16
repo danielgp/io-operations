@@ -36,7 +36,7 @@ namespace danielgp\IOExcel;
 trait IOExcel
 {
 
-    private function checkInputFeatures($inFeatures)
+    private function checkInputFeatures(array $inFeatures)
     {
         if (is_array($inFeatures)) {
             if (isset($inFeatures['filename'])) {
@@ -49,7 +49,7 @@ trait IOExcel
                 return 'No filename provided';
             }
             if (!isset($inFeatures['worksheetname'])) {
-                $inFeatures['worksheetname'] = 'Worksheet1';
+                return 'No worksheetname provided';
             }
             if (!is_array($inFeatures['contentArray'])) {
                 return 'No content!';
@@ -65,33 +65,14 @@ trait IOExcel
      *
      * @param array $inFeatures
      */
-    protected function setArrayToExcel($inFeatures)
+    protected function setArrayToExcel(array $inFeatures)
     {
         $checkInputs = $this->checkInputFeatures($inFeatures);
         if (!is_null($checkInputs)) {
             echo '<hr/>';
             echo $checkInputs;
             echo '<hr/>';
-            exit(0);
-        }
-        if (is_array($inFeatures)) {
-            if (isset($inFeatures['filename'])) {
-                if (is_string($inFeatures['filename'])) {
-                    $inFeatures['filename'] = filter_var($inFeatures['filename'], FILTER_SANITIZE_STRING);
-                } else {
-                    return 'Provided filename is not a string!';
-                }
-            } else {
-                return 'No filename provided';
-            }
-            if (!isset($inFeatures['worksheetname'])) {
-                $inFeatures['worksheetname'] = 'Worksheet1';
-            }
-            if (!is_array($inFeatures['contentArray'])) {
-                return 'No content!';
-            }
-        } else {
-            return 'Missing parameters!';
+            return '';
         }
         $xlFileName  = str_replace('.xls', '', $inFeatures['filename']) . '.xlsx';
         // Create an instance
@@ -209,7 +190,7 @@ trait IOExcel
         return $_indexCache[$pColIndex];
     }
 
-    private function setExcelProperties($objPHPExcel, $inProperties)
+    private function setExcelProperties(\PHPExcel $objPHPExcel, $inProperties)
     {
         if (isset($inProperties)) {
             if (isset($inProperties['Creator'])) {
@@ -230,7 +211,7 @@ trait IOExcel
         }
     }
 
-    private function setExcelWorksheetLayout($objPHPExcel, $crCol, $counter)
+    private function setExcelWorksheetLayout(\PHPExcel $objPHPExcel, $crCol, $counter)
     {
         $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
         //coresponding to A4
