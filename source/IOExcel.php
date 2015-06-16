@@ -80,7 +80,6 @@ trait IOExcel
         // Add a worksheet to the file, returning an object to add data to
         $objPHPExcel->setActiveSheetIndex(0);
         if (is_array($inFeatures['contentArray'])) {
-            $counter = 0;
             foreach ($inFeatures['contentArray'] as $key => $value) {
                 if ($key == 0) { // headers
                     $this->setExcelCellHeader($objPHPExcel, array_keys($value));
