@@ -33,20 +33,44 @@ class CommonCodeTest extends PHPUnit_Framework_TestCase
     public function testSetArrayToExcel()
     {
         $this->setArrayToExcel([
-            'contentArray'  => [
+            'Filename'   => 'C:/Windows/Temp/test.xlsx',
+            'Worksheets' => [
                 [
-                    'First Column'             => 10,
-                    'Second Column'            => 20,
-                    'Third Column'             => 30,
-                    'Large Text Column'        => 'This is a very large text column content and should be wrapped',
-                    'Zero Column as Blank'     => '0',
-                    'Timestamp Column'         => '15:00:00',
-                    'Timestamp Shorter Column' => '1:00:00',
-                ]
+                    'Name'    => 'Worksheet1',
+                    'Content' => [
+                        [
+                            'StartingColumnIndex' => 1,
+                            'StartingRowIndex'    => 1,
+                            'ContentArray'        => [
+                                [
+                                    'First Column'             => 10,
+                                    'Second Column'            => 20,
+                                    'Third Column'             => 30,
+                                    'Large Text Column'        => 'This is a very large text column content',
+                                    'Zero Column as Blank'     => '0',
+                                    'Timestamp Column'         => '15:00:00',
+                                    'Timestamp Shorter Column' => '1:00:00',
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'Name'    => 'Worksheet2',
+                    'Content' => [
+                        [
+                            'StartingColumnIndex' => 27,
+                            'StartingRowIndex'    => 2,
+                            'ContentArray'        => [
+                                [
+                                    'First Column' => 22,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-            'filename'      => 'C:/Windows/Temp/test.xls',
-            'worksheetname' => 'Worksheet1',
-            'properties'    => [
+            'Properties' => [
                 'Creator'        => 'PHPunit test',
                 'LastModifiedBy' => 'PHPunit test',
                 'description'    => 'PHPunit test description',

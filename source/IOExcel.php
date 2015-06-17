@@ -36,27 +36,33 @@ namespace danielgp\IOExcel;
 trait IOExcel
 {
 
-    private function checkInputFeatures(array $inFeatures)
+    private function checkInputFeatures(array &$inFeatures)
     {
-        if (is_array($inFeatures)) {
-            if (isset($inFeatures['filename'])) {
-                if (is_string($inFeatures['filename'])) {
-                    $inFeatures['filename'] = filter_var($inFeatures['filename'], FILTER_SANITIZE_STRING);
-                } else {
-                    return 'Provided filename is not a string!';
-                }
-            } else {
-                return 'No filename provided';
-            }
-            if (!isset($inFeatures['worksheetname'])) {
-                return 'No worksheetname provided';
-            }
-            if (!is_array($inFeatures['contentArray'])) {
-                return 'No content!';
-            }
-        } else {
-            return 'Missing parameters!';
+        if (!is_array($inFeatures)) {
+            return 'Check 1: Missing parameters!';
         }
+        if (!isset($inFeatures['Filename'])) {
+            return 'Check 2: No filename provided!';
+        }
+        if (is_string($inFeatures['Filename'])) {
+            $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
+        } else {
+            return 'Check 2.1: Provided filename is not a string!';
+        }
+//        if (isset($inFeatures['worksheets'])) {
+//            foreach ($inFeatures['worksheets'] as $wkValues) {
+//                if (isset($wkValues['name'])) {
+//
+//                } else {
+//                    return 'Check 2.1: No worksheet name provided!';
+//                }
+//            }
+//        } else {
+//            return 'Check 2: No worksheets structure provided!';
+//        }
+//        if (!is_array($inFeatures['contentArray'])) {
+//            return 'No content!';
+//        }
         return null;
     }
 
@@ -72,40 +78,61 @@ trait IOExcel
             echo '<hr/>' . $checkInputs . '<hr/>';
             return '';
         }
-        $xlFileName  = str_replace('.xls', '', $inFeatures['filename']) . '.xlsx';
-        // Create an instance
         $objPHPExcel = new \PHPExcel();
-        // Set properties
-        $this->setExcelProperties($objPHPExcel, $inFeatures['properties']);
-        // Add a worksheet to the file, returning an object to add data to
-        $objPHPExcel->setActiveSheetIndex(0);
-        if (is_array($inFeatures['contentArray'])) {
-            foreach ($inFeatures['contentArray'] as $key => $value) {
-                if ($key == 0) { // headers
-                    $this->setExcelCellHeader($objPHPExcel, array_keys($value));
-                    $crCol = $this->setArrayToExcelStringFromColumnIndex((count($value) - 1));
-                }
-                $this->setExcelCellContent($objPHPExcel, ($key + 1), $value);
-            }
-            $objPHPExcel->setActiveSheetIndex(0);
-            $objPHPExcel->getActiveSheet()->setTitle($inFeatures['worksheetname']);
-            $this->setExcelWorksheetLayout($objPHPExcel, $crCol, count($inFeatures['contentArray']));
-            if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
-                // output the created content to the browser and skip-it otherwise
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Pragma: private');
-                header('Cache-control: private, must-revalidate');
-                header('Content-Disposition: attachment;filename="' . $xlFileName . '"');
-                header('Cache-Control: max-age=0');
-            }
-            $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-            if (in_array(PHP_SAPI, ['cli', 'cli-server'])) {
-                $objWriter->save($xlFileName);
-            } else {
-                $objWriter->save('php://output');
-            }
-            unset($objPHPExcel);
+        if (isset($inFeatures['Properties'])) {
+            $this->setExcelProperties($objPHPExcel, $inFeatures['Properties']);
         }
+        foreach ($inFeatures['Worksheets'] as $key => $wkValue) {
+            if ($key > 0) {
+                $objPHPExcel
+                        ->createSheet();
+            }
+            $objPHPExcel
+                    ->setActiveSheetIndex($key);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->setTitle($wkValue['Name']);
+            foreach ($wkValue['Content'] as $cntValue) {
+                $rowIndex = $cntValue['StartingRowIndex'];
+                foreach ($cntValue['ContentArray'] as $key => $value) {
+                    if ($key == 0) {
+                        $this->setExcelHeaderCellContent($objPHPExcel, [
+                            'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
+                            'StartingRowIndex'    => $rowIndex,
+                            'RowValues'           => array_keys($value),
+                        ]);
+                        $endingRowIndex = $cntValue['StartingRowIndex'] + count(array_keys($value)) - 1;
+                    }
+                    $this->setExcelRowCellContent($objPHPExcel, [
+                        'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
+                        'CurrentRowIndex'     => ($rowIndex + 1),
+                        'RowValues'           => $value,
+                    ]);
+                    $rowIndex++;
+                }
+            }
+            $this->setExcelWorksheetPagination($objPHPExcel);
+            $this->setExcelWorksheetUsability($objPHPExcel, [
+                'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
+                'HeaderRowIndex'      => $cntValue['StartingRowIndex'],
+            ]);
+        }
+        $objPHPExcel->setActiveSheetIndex(0);
+        if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
+            // output the created content to the browser and skip-it otherwise
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Pragma: private');
+            header('Cache-control: private, must-revalidate');
+            header('Content-Disposition: attachment;filename="' . $inFeatures['Filename'] . '"');
+            header('Cache-Control: max-age=0');
+        }
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        if (in_array(PHP_SAPI, ['cli', 'cli-server'])) {
+            $objWriter->save($inFeatures['Filename']);
+        } else {
+            $objWriter->save('php://output');
+        }
+        unset($objPHPExcel);
     }
 
     /**
@@ -124,33 +151,99 @@ trait IOExcel
             // Determine column string
             if ($pColIndex < 26) {
                 // 26 is the last # of column of 1 single letter
-                $_indexCache[$pColIndex] = chr(65 + $pColIndex);
+                $_indexCache[$pColIndex] = chr(64 + $pColIndex);
             } elseif ($pColIndex < 702) {
                 // 702 is the last # of columns with 2 letters
-                $_indexCache[$pColIndex] = chr(64 + ($pColIndex / 26)) . chr(65 + $pColIndex % 26);
+                $_indexCache[$pColIndex] = chr(64 + ($pColIndex / 26)) . chr(64 + $pColIndex % 26);
             } else {
                 // anything above 702 as # of column has 3 letters combination
                 $_indexCache[$pColIndex] = chr(64 + (($pColIndex - 26) / 676))
-                        . chr(65 + ((($pColIndex - 26) % 676) / 26))
-                        . chr(65 + $pColIndex % 26);
+                        . chr(64 + ((($pColIndex - 26) % 676) / 26))
+                        . chr(64 + $pColIndex % 26);
             }
         }
         return $_indexCache[$pColIndex];
     }
 
-    private function setExcelCellContent(\PHPExcel $objPHPExcel, $counter, $value)
+    private function setExcelHeaderCellContent(\PHPExcel $objPHPExcel, array $inputs)
     {
-        $columnCounter = 0;
-        foreach ($value as $value2) {
+        $columnCounter = $inputs['StartingColumnIndex'];
+        foreach ($inputs['RowValues'] as $value2) {
+            $crtCol = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getColumnDimension($crtCol)
+                    ->setAutoSize(true);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->SetCellValue($crtCol . $inputs['StartingRowIndex'], $value2);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getStyle($crtCol . $inputs['StartingRowIndex'])
+                    ->getFill()
+                    ->applyFromArray([
+                        'type'       => 'solid',
+                        'startcolor' => ['rgb' => 'CCCCCC'],
+                        'endcolor'   => ['rgb' => 'CCCCCC'],
+            ]);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getStyle($crtCol . $inputs['StartingRowIndex'])
+                    ->applyFromArray([
+                        'font' => [
+                            'bold'  => true,
+                            'color' => ['rgb' => '000000'],
+                        ]
+            ]);
+            $columnCounter++;
+        }
+        $objPHPExcel
+                ->getActiveSheet()
+                ->calculateColumnWidths();
+    }
+
+    private function setExcelProperties(\PHPExcel $objPHPExcel, $inProperties)
+    {
+        if (isset($inProperties['Creator'])) {
+            $objPHPExcel
+                    ->getProperties()
+                    ->setCreator($inProperties['Creator']);
+        }
+        if (isset($inProperties['LastModifiedBy'])) {
+            $objPHPExcel
+                    ->getProperties()
+                    ->setLastModifiedBy($inProperties['LastModifiedBy']);
+        }
+        if (isset($inProperties['description'])) {
+            $objPHPExcel
+                    ->getProperties()
+                    ->setDescription($inProperties['description']);
+        }
+        if (isset($inProperties['subject'])) {
+            $objPHPExcel
+                    ->getProperties()
+                    ->setSubject($inProperties['subject']);
+        }
+        if (isset($inProperties['title'])) {
+            $objPHPExcel
+                    ->getProperties()
+                    ->setTitle($inProperties['title']);
+        }
+    }
+
+    private function setExcelRowCellContent(\PHPExcel $objPHPExcel, array $inputs)
+    {
+        $columnCounter = $inputs['StartingColumnIndex'];
+        foreach ($inputs['RowValues'] as $value2) {
             $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
             $objPHPExcel
                     ->getActiveSheet()
                     ->getColumnDimension($crCol)
                     ->setAutoSize(false);
-            $crtCellAddress = $crCol . ($counter + 1);
+            $crtCellAddress = $crCol . $inputs['CurrentRowIndex'];
             if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
                 $value2 = '';
-            } elseif ((strlen($value2) == 8) && (strpos($value2, ':') !== false)) {
+            } elseif (((strlen($value2) == 8) || (strlen($value2) == 7)) && (strpos($value2, ':') !== false)) {
                 $objPHPExcel
                         ->getActiveSheet()
                         ->SetCellValue($crtCellAddress, ($this->setLocalTime2Seconds($value2) / 60 / 60 / 24));
@@ -168,75 +261,11 @@ trait IOExcel
         }
     }
 
-    private function setExcelCellHeader(\PHPExcel $objPHPExcel, $value)
-    {
-        $columnCounter = 0;
-        foreach ($value as $value2) {
-            $crCol = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
-            $objPHPExcel
-                    ->getActiveSheet()
-                    ->getColumnDimension($crCol)
-                    ->setAutoSize(true);
-            $objPHPExcel
-                    ->getActiveSheet()
-                    ->SetCellValue($crCol . '1', $value2);
-            $objPHPExcel
-                    ->getActiveSheet()
-                    ->getStyle($crCol . '1')
-                    ->getFill()
-                    ->applyFromArray([
-                        'type'       => 'solid',
-                        'startcolor' => ['rgb' => 'CCCCCC'],
-                        'endcolor'   => ['rgb' => 'CCCCCC'],
-            ]);
-            $objPHPExcel
-                    ->getActiveSheet()
-                    ->getStyle($crCol . '1')
-                    ->applyFromArray([
-                        'font' => [
-                            'bold'  => true,
-                            'color' => ['rgb' => '000000'],
-                        ]
-            ]);
-            $columnCounter += 1;
-        }
-        $objPHPExcel
-                ->getActiveSheet()
-                ->calculateColumnWidths();
-    }
-
-    private function setExcelProperties(\PHPExcel $objPHPExcel, $inProperties)
-    {
-        if (isset($inProperties)) {
-            if (isset($inProperties['Creator'])) {
-                $objPHPExcel->getProperties()->setCreator($inProperties['Creator']);
-            }
-            if (isset($inProperties['LastModifiedBy'])) {
-                $objPHPExcel->getProperties()->setLastModifiedBy($inProperties['LastModifiedBy']);
-            }
-            if (isset($inProperties['description'])) {
-                $objPHPExcel->getProperties()->setDescription($inProperties['description']);
-            }
-            if (isset($inProperties['subject'])) {
-                $objPHPExcel->getProperties()->setSubject($inProperties['subject']);
-            }
-            if (isset($inProperties['title'])) {
-                $objPHPExcel->getProperties()->setTitle($inProperties['title']);
-            }
-        }
-    }
-
-    private function setExcelWorksheetLayout(\PHPExcel $objPHPExcel, $crCol, $counter)
+    private function setExcelWorksheetPagination(\PHPExcel $objPHPExcel)
     {
         $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
-        //coresponding to A4
-        $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9);
-        // freeze 1st top row
-        $objPHPExcel->getActiveSheet()->freezePane('A2');
-        // activate AutoFilter
-        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:' . $crCol . $counter);
-        // margin is set in inches (0.7cm)
-        $margin = 0.7 / 2.54;
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9); //coresponding to A4
+        $margin = 0.7 / 2.54; // margin is set in inches (0.7cm)
         $objPHPExcel->getActiveSheet()->getPageMargins()->setHeader($margin);
         $objPHPExcel->getActiveSheet()->getPageMargins()->setTop($margin * 2);
         $objPHPExcel->getActiveSheet()->getPageMargins()->setBottom($margin);
@@ -244,10 +273,31 @@ trait IOExcel
         $objPHPExcel->getActiveSheet()->getPageMargins()->setRight($margin);
         // add header content
         $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&L&F&RPage &P / &N');
+        $objPHPExcel->getActiveSheet()->setPrintGridlines(true); // activate printing of gridlines
+    }
+
+    private function setExcelWorksheetUsability(\PHPExcel $objPHPExcel, $inputs)
+    {
         // repeat coloumn headings for every new page...
-        $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
-        // activate printing of gridlines
-        $objPHPExcel->getActiveSheet()->setPrintGridlines(true);
+        $objPHPExcel
+                ->getActiveSheet()
+                ->getPageSetup()
+                ->setRowsToRepeatAtTopByStartAndEnd(1, $inputs['HeaderRowIndex']);
+        // activate AutoFilter
+        $autoFilterArea = implode('', [
+            $this->setArrayToExcelStringFromColumnIndex($inputs['StartingColumnIndex']),
+            $inputs['HeaderRowIndex'],
+            ':',
+            $objPHPExcel->getActiveSheet()->getHighestDataColumn(),
+            $objPHPExcel->getActiveSheet()->getHighestDataRow(),
+        ]);
+        $objPHPExcel
+                ->getActiveSheet()
+                ->setAutoFilter($autoFilterArea);
+        // freeze 1st top row
+        $objPHPExcel
+                ->getActiveSheet()
+                ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
     }
 
     private function setLocalTime2Seconds($RSQLtime)
