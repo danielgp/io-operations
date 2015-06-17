@@ -83,8 +83,7 @@ trait IOExcel
             foreach ($inFeatures['contentArray'] as $key => $value) {
                 if ($key == 0) { // headers
                     $this->setExcelCellHeader($objPHPExcel, array_keys($value));
-                    $columnCounter = count($value) - 1;
-                    $crCol         = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+                    $crCol = $this->setArrayToExcelStringFromColumnIndex((count($value) - 1));
                 }
                 $this->setExcelCellContent($objPHPExcel, ($key + 1), $value);
             }
@@ -144,13 +143,11 @@ trait IOExcel
         $columnCounter = 0;
         foreach ($value as $value2) {
             $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getColumnDimension($crCol)
+                    ->setAutoSize(false);
             $crtCellAddress = $crCol . ($counter + 1);
-            if (strlen($value2) > 50) {
-                $objPHPExcel->getActiveSheet()->getStyle($crtCellAddress)->getAlignment()->setWrapText(true);
-            }
-            if ($counter == 1) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($crCol)->setAutoSize(false);
-            }
             if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
                 $value2 = '';
             } elseif ((strlen($value2) == 8) && (strpos($value2, ':') !== false)) {
@@ -175,24 +172,37 @@ trait IOExcel
     {
         $columnCounter = 0;
         foreach ($value as $value2) {
-            $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($crCol)->setAutoSize(true);
-            $crtCellAddress = $crCol . '1';
-            $objPHPExcel->getActiveSheet()->SetCellValue($crtCellAddress, $value2);
-            $objPHPExcel->getActiveSheet()->getStyle($crCol . '1')->getFill()->applyFromArray([
-                'type'       => 'solid',
-                'startcolor' => ['rgb' => 'CCCCCC'],
-                'endcolor'   => ['rgb' => 'CCCCCC'],
+            $crCol = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getColumnDimension($crCol)
+                    ->setAutoSize(true);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->SetCellValue($crCol . '1', $value2);
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getStyle($crCol . '1')
+                    ->getFill()
+                    ->applyFromArray([
+                        'type'       => 'solid',
+                        'startcolor' => ['rgb' => 'CCCCCC'],
+                        'endcolor'   => ['rgb' => 'CCCCCC'],
             ]);
-            $objPHPExcel->getActiveSheet()->getStyle($crCol . '1')->applyFromArray([
-                'font' => [
-                    'bold'  => true,
-                    'color' => ['rgb' => '000000'],
-                ]
+            $objPHPExcel
+                    ->getActiveSheet()
+                    ->getStyle($crCol . '1')
+                    ->applyFromArray([
+                        'font' => [
+                            'bold'  => true,
+                            'color' => ['rgb' => '000000'],
+                        ]
             ]);
             $columnCounter += 1;
         }
-        $objPHPExcel->getActiveSheet()->calculateColumnWidths();
+        $objPHPExcel
+                ->getActiveSheet()
+                ->calculateColumnWidths();
     }
 
     private function setExcelProperties(\PHPExcel $objPHPExcel, $inProperties)
