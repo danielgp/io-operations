@@ -36,33 +36,44 @@ namespace danielgp\IOExcel;
 trait IOExcel
 {
 
+    /**
+     * manages the inputs checks
+     *
+     * @param array $inFeatures
+     * @return null
+     * @throws \PHPExcel_Exception
+     */
     private function checkInputFeatures(array &$inFeatures)
     {
         if (!is_array($inFeatures)) {
-            return 'Check 1: Missing parameters!';
+            throw new \PHPExcel_Exception('Check 1: Missing parameters!');
         }
         if (!isset($inFeatures['Filename'])) {
-            return 'Check 2: No filename provided!';
+            throw new \PHPExcel_Exception('Check 2: No filename provided!');
+        } elseif (!is_string($inFeatures['Filename'])) {
+            throw new \PHPExcel_Exception('Check 2.1: Provided filename is not a string!');
         }
-        if (is_string($inFeatures['Filename'])) {
-            $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
+        if (!isset($inFeatures['Worksheets'])) {
+            throw new \PHPExcel_Exception('Check 3: No worksheets provided!');
+        } elseif (!is_array($inFeatures['Worksheets'])) {
+            throw new \PHPExcel_Exception('Check 3.1: Provided worksheets is not an array!');
         } else {
-            return 'Check 2.1: Provided filename is not a string!';
+            foreach ($inFeatures['Worksheets'] as $key => $value) {
+                if (!isset($value['Name'])) {
+                    throw new \PHPExcel_Exception('Check 4: No Name was provided for the worksheet #' . $key . ' !');
+                } elseif (!is_string($value['Name'])) {
+                    throw new \PHPExcel_Exception('Check 4.1: The Name provided for the worksheet #'
+                    . $key . ' is not a string!');
+                }
+                if (!isset($value['Content'])) {
+                    throw new \PHPExcel_Exception('Check 5: No Content was provided for the worksheet #'
+                    . $key . ' !');
+                } elseif (!is_array($value['Content'])) {
+                    throw new \PHPExcel_Exception('Check 4.1: The Content provided for the worksheet #'
+                    . $key . ' is not an array!');
+                }
+            }
         }
-//        if (isset($inFeatures['worksheets'])) {
-//            foreach ($inFeatures['worksheets'] as $wkValues) {
-//                if (isset($wkValues['name'])) {
-//
-//                } else {
-//                    return 'Check 2.1: No worksheet name provided!';
-//                }
-//            }
-//        } else {
-//            return 'Check 2: No worksheets structure provided!';
-//        }
-//        if (!is_array($inFeatures['contentArray'])) {
-//            return 'No content!';
-//        }
         return null;
     }
 
@@ -101,7 +112,6 @@ trait IOExcel
                             'StartingRowIndex'    => $rowIndex,
                             'RowValues'           => array_keys($value),
                         ]);
-                        $endingRowIndex = $cntValue['StartingRowIndex'] + count(array_keys($value)) - 1;
                     }
                     $this->setExcelRowCellContent($objPHPExcel, [
                         'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
@@ -118,6 +128,7 @@ trait IOExcel
             ]);
         }
         $objPHPExcel->setActiveSheetIndex(0);
+        $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
         if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
             // output the created content to the browser and skip-it otherwise
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -165,6 +176,12 @@ trait IOExcel
         return $_indexCache[$pColIndex];
     }
 
+    /**
+     * Ouputs the header cells
+     *
+     * @param \PHPExcel $objPHPExcel
+     * @param array $inputs
+     */
     private function setExcelHeaderCellContent(\PHPExcel $objPHPExcel, array $inputs)
     {
         $columnCounter = $inputs['StartingColumnIndex'];
@@ -202,7 +219,13 @@ trait IOExcel
                 ->calculateColumnWidths();
     }
 
-    private function setExcelProperties(\PHPExcel $objPHPExcel, $inProperties)
+    /**
+     * sets the Properties for the Excel file
+     *
+     * @param \PHPExcel $objPHPExcel
+     * @param array $inProperties
+     */
+    private function setExcelProperties(\PHPExcel $objPHPExcel, array $inProperties)
     {
         if (isset($inProperties['Creator'])) {
             $objPHPExcel
@@ -231,6 +254,12 @@ trait IOExcel
         }
     }
 
+    /**
+     * Outputs the content cells
+     *
+     * @param \PHPExcel $objPHPExcel
+     * @param array $inputs
+     */
     private function setExcelRowCellContent(\PHPExcel $objPHPExcel, array $inputs)
     {
         $columnCounter = $inputs['StartingColumnIndex'];
@@ -261,6 +290,11 @@ trait IOExcel
         }
     }
 
+    /**
+     * sets the Pagination
+     *
+     * @param \PHPExcel $objPHPExcel
+     */
     private function setExcelWorksheetPagination(\PHPExcel $objPHPExcel)
     {
         $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
@@ -276,6 +310,12 @@ trait IOExcel
         $objPHPExcel->getActiveSheet()->setPrintGridlines(true); // activate printing of gridlines
     }
 
+    /**
+     * Sets a few usability features
+     *
+     * @param \PHPExcel $objPHPExcel
+     * @param type $inputs
+     */
     private function setExcelWorksheetUsability(\PHPExcel $objPHPExcel, $inputs)
     {
         // repeat coloumn headings for every new page...
@@ -300,6 +340,12 @@ trait IOExcel
                 ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
     }
 
+    /**
+     * Converts the time string given into native Excel format (number)
+     *
+     * @param string $RSQLtime
+     * @return string
+     */
     private function setLocalTime2Seconds($RSQLtime)
     {
         $sign = '';
