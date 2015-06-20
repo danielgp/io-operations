@@ -50,58 +50,70 @@ trait BrowserAgentInfosByDanielGP
         $aReturn = [];
         switch ($targetToAnalyze) {
             case 'browser':
-                if (strpos($userAgent, 'i586')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                } elseif (strpos($userAgent, 'i586')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                } elseif (strpos($userAgent, 'ia32;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                } elseif (strpos($userAgent, 'WOW64')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                } elseif (strpos($userAgent, 'x86;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                } elseif (strpos($userAgent, 'Android;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['arm'];
-                } elseif (strpos($userAgent, 'amd64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos(strtolower($userAgent), 'AMD64')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'x86_64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'Win64;') && strpos($userAgent, 'x64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } else {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                }
+                $aReturn = $this->getArchitectureFromUserAgentBrowser($userAgent);
                 break;
             case 'os':
-                if (strpos($userAgent, 'x86_64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'x86-64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'Win64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'x64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos(strtolower($userAgent), 'amd64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos(strtolower($userAgent), 'AMD64')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'WOW64')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'x64_64;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-                } elseif (strpos($userAgent, 'Android;')) {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['arm'];
-                } else {
-                    $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-                }
+                $aReturn = $this->getArchitectureFromUserAgentOperatingSystem($userAgent);
                 break;
             default:
                 $aReturn = [
                     'name' => '---'
                 ];
                 break;
+        }
+        return $aReturn;
+    }
+
+    private function getArchitectureFromUserAgentBrowser($userAgent)
+    {
+        if (strpos($userAgent, 'i586')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+        } elseif (strpos($userAgent, 'i586')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+        } elseif (strpos($userAgent, 'ia32;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+        } elseif (strpos($userAgent, 'WOW64')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+        } elseif (strpos($userAgent, 'x86;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+        } elseif (strpos($userAgent, 'Android;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['arm'];
+        } elseif (strpos($userAgent, 'amd64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos(strtolower($userAgent), 'AMD64')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'x86_64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'Win64;') && strpos($userAgent, 'x64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } else {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+        }
+        return $aReturn;
+    }
+
+    private function getArchitectureFromUserAgentOperatingSystem($userAgent)
+    {
+        if (strpos($userAgent, 'x86_64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'x86-64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'Win64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'x64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos(strtolower($userAgent), 'amd64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos(strtolower($userAgent), 'AMD64')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'WOW64')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'x64_64;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        } elseif (strpos($userAgent, 'Android;')) {
+            $aReturn = $this->listOfKnownCpuArchitectures()['arm'];
+        } else {
+            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
         }
         return $aReturn;
     }
