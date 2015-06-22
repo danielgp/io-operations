@@ -36,8 +36,6 @@ namespace danielgp\browser_agent_info;
 trait BrowserAgentInfosByDanielGP
 {
 
-    use \danielgp\network_components\NetworkComponentsByDanielGP;
-
     /**
      * Return CPU architecture details from given user agent
      *
