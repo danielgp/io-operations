@@ -66,8 +66,6 @@ trait BrowserAgentInfosByDanielGP
     {
         if (strpos($userAgent, 'i586')) {
             $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-        } elseif (strpos($userAgent, 'i586')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
         } elseif (strpos($userAgent, 'ia32;')) {
             $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
         } elseif (strpos($userAgent, 'WOW64')) {
@@ -180,16 +178,8 @@ trait BrowserAgentInfosByDanielGP
      */
     protected function getClientBrowserDetails($returnType = ['Browser', 'Device', 'OS'], $tmpFolder = null)
     {
-        if (isset($_GET['ua'])) {
-            $userAgent = $_GET['ua'];
-        } else {
-            if (isset($_SERVER['HTTP_USER_AGENT'])) {
-                $userAgent = $_SERVER['HTTP_USER_AGENT'];
-            } elseif (PHP_SAPI === 'cli' || empty($_SERVER['REMOTE_ADDR'])) {  // command line
-                $userAgent = 'PHP/' . PHP_VERSION . ' comand-line';
-            }
-        }
-        $dd = new \DeviceDetector\DeviceDetector($userAgent);
+        $userAgent = $this->getUserAgentByCommonLib();
+        $dd        = new \DeviceDetector\DeviceDetector($userAgent);
         if (is_null($tmpFolder)) {
             $tmpFolder = '../../tmp/DoctrineCache/';
         }
@@ -264,10 +254,16 @@ trait BrowserAgentInfosByDanielGP
      */
     protected function getUserAgentByCommonLib()
     {
-        if (isset($_SERVER['HTTP_USER_AGENT'])) {
-            $crtUserAgent = filter_var($_SERVER['HTTP_USER_AGENT'], FILTER_UNSAFE_RAW, FILTER_NULL_ON_FAILURE);
+        if (isset($_GET['ua'])) {
+            $userAgent = $_GET['ua'];
         } else {
-            $crtUserAgent = null;
+            if (isset($_SERVER['HTTP_USER_AGENT'])) {
+                $crtUserAgent = filter_var($_SERVER['HTTP_USER_AGENT'], FILTER_UNSAFE_RAW, FILTER_NULL_ON_FAILURE);
+            } elseif (PHP_SAPI === 'cli' || empty($_SERVER['REMOTE_ADDR'])) {  // command line
+                $crtUserAgent = 'PHP/' . PHP_VERSION . ' comand-line';
+            } else {
+                $crtUserAgent = '';
+            }
         }
         return $crtUserAgent;
     }
