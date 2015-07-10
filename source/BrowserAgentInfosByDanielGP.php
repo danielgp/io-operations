@@ -62,54 +62,38 @@ trait BrowserAgentInfosByDanielGP
         return $aReturn;
     }
 
-    private function getArchitectureFromUserAgentBrowser($userAgent)
+    private function getArchitectureFromUserAgentBrowser($usrA)
     {
-        if (strpos($userAgent, 'i586')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-        } elseif (strpos($userAgent, 'ia32;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-        } elseif (strpos($userAgent, 'WOW64')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-        } elseif (strpos($userAgent, 'x86;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
-        } elseif (strpos($userAgent, 'Android;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['arm'];
-        } elseif (strpos($userAgent, 'amd64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos(strtolower($userAgent), 'AMD64')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'x86_64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'Win64;') && strpos($userAgent, 'x64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
+        $knownArchitectures = $this->listOfKnownCpuArchitectures();
+        if (strpos($usrA, 'i386') || strpos($usrA, 'i586') || strpos($usrA, 'ia32;')) {
+            $aReturn = $knownArchitectures['ia32'];
+        } elseif (strpos($usrA, 'WOW64') || strpos($usrA, 'x86;')) {
+            $aReturn = $knownArchitectures['ia32'];
+        } elseif (strpos($usrA, 'Android;')) {
+            $aReturn = $knownArchitectures['arm'];
+        } elseif (strpos(strtolower($usrA), 'amd64;') || strpos($usrA, 'AMD64') || strpos($usrA, 'x86_64;')) {
+            $aReturn = $knownArchitectures['amd64'];
+        } elseif (strpos($usrA, 'Win64;') && strpos($usrA, 'x64;')) {
+            $aReturn = $knownArchitectures['amd64'];
         } else {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+            $aReturn = $knownArchitectures['ia32'];
         }
         return $aReturn;
     }
 
-    private function getArchitectureFromUserAgentOperatingSystem($userAgent)
+    private function getArchitectureFromUserAgentOperatingSystem($usrA)
     {
-        if (strpos($userAgent, 'x86_64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'x86-64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'Win64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'x64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos(strtolower($userAgent), 'amd64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos(strtolower($userAgent), 'AMD64')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'WOW64')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'x64_64;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['amd64'];
-        } elseif (strpos($userAgent, 'Android;')) {
-            $aReturn = $this->listOfKnownCpuArchitectures()['arm'];
+        $ka = $this->listOfKnownCpuArchitectures();
+        if (strpos($usrA, 'x86_64;') || strpos($usrA, 'x86-64;') || strpos($usrA, 'Win64;') || strpos($usrA, 'x64;')) {
+            $aReturn = $ka['amd64'];
+        } elseif (strpos(strtolower($usrA), 'amd64;') || strpos($usrA, 'AMD64')) {
+            $aReturn = $ka['amd64'];
+        } elseif (strpos($usrA, 'WOW64') || strpos($usrA, 'x64_64;')) {
+            $aReturn = $ka['amd64'];
+        } elseif (strpos($usrA, 'Android;')) {
+            $aReturn = $ka['arm'];
         } else {
-            $aReturn = $this->listOfKnownCpuArchitectures()['ia32'];
+            $aReturn = $ka['ia32'];
         }
         return $aReturn;
     }
@@ -254,6 +238,7 @@ trait BrowserAgentInfosByDanielGP
      */
     protected function getUserAgentByCommonLib()
     {
+        $crtUserAgent = '';
         if (isset($_GET['ua'])) {
             $userAgent = $_GET['ua'];
         } else {
@@ -261,8 +246,6 @@ trait BrowserAgentInfosByDanielGP
                 $crtUserAgent = filter_var($_SERVER['HTTP_USER_AGENT'], FILTER_UNSAFE_RAW, FILTER_NULL_ON_FAILURE);
             } elseif (PHP_SAPI === 'cli' || empty($_SERVER['REMOTE_ADDR'])) {  // command line
                 $crtUserAgent = 'PHP/' . PHP_VERSION . ' comand-line';
-            } else {
-                $crtUserAgent = '';
             }
         }
         return $crtUserAgent;
