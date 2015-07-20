@@ -240,7 +240,7 @@ trait BrowserAgentInfosByDanielGP
     {
         $crtUserAgent = '';
         if (isset($_GET['ua'])) {
-            $userAgent = $_GET['ua'];
+            $crtUserAgent = $_GET['ua'];
         } else {
             if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $crtUserAgent = filter_var($_SERVER['HTTP_USER_AGENT'], FILTER_UNSAFE_RAW, FILTER_NULL_ON_FAILURE);
