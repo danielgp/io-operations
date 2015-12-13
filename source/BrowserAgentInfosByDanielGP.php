@@ -83,17 +83,17 @@ trait BrowserAgentInfosByDanielGP
 
     private function getArchitectureFromUserAgentOperatingSystem($usrA)
     {
-        $ka = $this->listOfKnownCpuArchitectures();
+        $knowCpuArchitecture = $this->listOfKnownCpuArchitectures();
         if (strpos($usrA, 'x86_64;') || strpos($usrA, 'x86-64;') || strpos($usrA, 'Win64;') || strpos($usrA, 'x64;')) {
-            $aReturn = $ka['amd64'];
+            $aReturn = $knowCpuArchitecture['amd64'];
         } elseif (strpos(strtolower($usrA), 'amd64;') || strpos($usrA, 'AMD64')) {
-            $aReturn = $ka['amd64'];
+            $aReturn = $knowCpuArchitecture['amd64'];
         } elseif (strpos($usrA, 'WOW64') || strpos($usrA, 'x64_64;')) {
-            $aReturn = $ka['amd64'];
+            $aReturn = $knowCpuArchitecture['amd64'];
         } elseif (strpos($usrA, 'Android;')) {
-            $aReturn = $ka['arm'];
+            $aReturn = $knowCpuArchitecture['arm'];
         } else {
-            $aReturn = $ka['ia32'];
+            $aReturn = $knowCpuArchitecture['ia32'];
         }
         return $aReturn;
     }
@@ -107,16 +107,17 @@ trait BrowserAgentInfosByDanielGP
      */
     private function getClientBrowser(\DeviceDetector\DeviceDetector $deviceDetectorClass, $userAgent)
     {
-        $br                 = new \DeviceDetector\Parser\Client\Browser();
-        $browserFamily      = $br->getBrowserFamily($deviceDetectorClass->getClient('short_name'));
-        $browserInformation = array_merge([
+        $browserClass       = new \DeviceDetector\Parser\Client\Browser();
+        $browserFamily      = $browserClass->getBrowserFamily($deviceDetectorClass->getClient('short_name'));
+        $browserInfoArray   = [
             'architecture' => $this->getArchitectureFromUserAgent($userAgent, 'browser'),
             'connection'   => (isset($_SERVER['HTTP_CONNECTION']) ? $_SERVER['HTTP_CONNECTION'] : ''),
             'family'       => ($browserFamily !== false ? $browserFamily : '---'),
             'host'         => (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ''),
             'referrer'     => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
             'user_agent'   => $this->getUserAgentByCommonLib(),
-                ], $this->getClientBrowserAccepted());
+        ];
+        $browserInformation = array_merge($browserInfoArray, $this->getClientBrowserAccepted());
         $clientDetails      = $deviceDetectorClass->getClient();
         if (is_array($clientDetails)) {
             $browserInformation                  = array_merge($browserInformation, $clientDetails);
@@ -147,9 +148,9 @@ trait BrowserAgentInfosByDanielGP
         }
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $sReturn['accept_language']     = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-            preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $m);
-            $sReturn['preferred locale']    = $m[0];
-            $sReturn['preferred languages'] = array_values(array_unique(array_values($m[1])));
+            preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $prfd);
+            $sReturn['preferred locale']    = $prfd[0];
+            $sReturn['preferred languages'] = array_values(array_unique(array_values($prfd[1])));
         }
         return $sReturn;
     }
@@ -162,30 +163,30 @@ trait BrowserAgentInfosByDanielGP
      */
     protected function getClientBrowserDetails($returnType = ['Browser', 'Device', 'OS'], $tmpFolder = null)
     {
-        $userAgent = $this->getUserAgentByCommonLib();
-        $dd        = new \DeviceDetector\DeviceDetector($userAgent);
+        $userAgent      = $this->getUserAgentByCommonLib();
+        $devDetectClass = new \DeviceDetector\DeviceDetector($userAgent);
         if (is_null($tmpFolder)) {
             $tmpFolder = '../../tmp/DoctrineCache/';
         }
-        $dd->setCache(new \Doctrine\Common\Cache\PhpFileCache($tmpFolder));
-        $dd->discardBotInformation();
-        $dd->parse();
-        if ($dd->isBot()) {
+        $devDetectClass->setCache(new \Doctrine\Common\Cache\PhpFileCache($tmpFolder));
+        $devDetectClass->discardBotInformation();
+        $devDetectClass->parse();
+        if ($devDetectClass->isBot()) {
             $aReturn = [
-                'Bot' => $dd->getBot(), // handle bots,spiders,crawlers,...
+                'Bot' => $devDetectClass->getBot(), // handle bots,spiders,crawlers,...
             ];
         } else {
             $aReturn = [];
             foreach ($returnType as $value) {
                 switch ($value) {
                     case 'Browser':
-                        $aReturn[$value] = $this->getClientBrowser($dd, $userAgent);
+                        $aReturn[$value] = $this->getClientBrowser($devDetectClass, $userAgent);
                         break;
                     case 'Device':
-                        $aReturn[$value] = $this->getClientBrowserDevice($dd);
+                        $aReturn[$value] = $this->getClientBrowserDevice($devDetectClass);
                         break;
                     case 'OS':
-                        $aReturn[$value] = $this->getClientBrowserOperatingSystem($dd, $userAgent);
+                        $aReturn[$value] = $this->getClientBrowserOperatingSystem($devDetectClass, $userAgent);
                         break;
                 }
             }
@@ -224,8 +225,8 @@ trait BrowserAgentInfosByDanielGP
     {
         $aReturn                 = $deviceDetectorClass->getOs();
         $aReturn['architecture'] = $this->getArchitectureFromUserAgent($userAgent, 'os');
-        $os                      = new \DeviceDetector\Parser\OperatingSystem();
-        $osFamily                = $os->getOsFamily($deviceDetectorClass->getOs('short_name'));
+        $operatingSystem         = new \DeviceDetector\Parser\OperatingSystem();
+        $osFamily                = $operatingSystem->getOsFamily($deviceDetectorClass->getOs('short_name'));
         $aReturn['family']       = ($osFamily !== false ? $osFamily : 'Unknown');
         ksort($aReturn);
         return $aReturn;
