@@ -95,14 +95,10 @@ trait IOExcel
         }
         foreach ($inFeatures['Worksheets'] as $key => $wkValue) {
             if ($key > 0) {
-                $objPHPExcel
-                        ->createSheet();
+                $objPHPExcel->createSheet();
             }
-            $objPHPExcel
-                    ->setActiveSheetIndex($key);
-            $objPHPExcel
-                    ->getActiveSheet()
-                    ->setTitle($wkValue['Name']);
+            $objPHPExcel->setActiveSheetIndex($key);
+            $objPHPExcel->getActiveSheet()->setTitle($wkValue['Name']);
             foreach ($wkValue['Content'] as $cntValue) {
                 $rowIndex = $cntValue['StartingRowIndex'];
                 foreach ($cntValue['ContentArray'] as $key => $value) {
