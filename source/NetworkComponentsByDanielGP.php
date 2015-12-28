@@ -34,17 +34,17 @@ trait NetworkComponentsByDanielGP
     /**
      * Determines if a given IP is with a defined range
      *
-     * @param ipv4 $ip
+     * @param ipv4 $ipGiven
      * @param ipv4 $ipStart
      * @param ipv4 $ipEnd
      * @return string
      */
-    protected function checkIpIsInRange($ip, $ipStart, $ipEnd)
+    protected function checkIpIsInRange($ipGiven, $ipStart, $ipEnd)
     {
         $sReturn     = 'out';
         $startNo     = $this->convertIpToNumber($ipStart);
         $endNo       = $this->convertIpToNumber($ipEnd);
-        $evaluatedNo = $this->convertIpToNumber($ip);
+        $evaluatedNo = $this->convertIpToNumber($ipGiven);
         if ($sReturn == 'out') {
             if (($evaluatedNo >= $startNo) && ($evaluatedNo <= $endNo)) {
                 $sReturn = 'in';
@@ -56,14 +56,14 @@ trait NetworkComponentsByDanielGP
     /**
      * Checks if given IP is a private or public one
      *
-     * @param ipv4 $ip
+     * @param ipv4 $ipGiven
      * @return string
      */
-    protected function checkIpIsPrivate($ip)
+    protected function checkIpIsPrivate($ipGiven)
     {
         $ipType = 'unkown';
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-            if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
+        if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
+            if (!filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
                 $ipType = 'private';
             } else {
                 $ipType = 'public';
@@ -77,16 +77,16 @@ trait NetworkComponentsByDanielGP
     /**
      * Checks if given IP is a V4 or V6
      *
-     * @param ipv4 $ip
+     * @param ipv4 $ipGiven
      * @return string
      */
-    protected function checkIpIsV4OrV6($ip)
+    protected function checkIpIsV4OrV6($ipGiven)
     {
         $ipType = 'unkown';
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
+            if (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                 $ipType = 'V4';
-            } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            } elseif (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
                 $ipType = 'V6';
             }
         } else {
@@ -98,19 +98,19 @@ trait NetworkComponentsByDanielGP
     /**
      * Converts IP to a number
      *
-     * @param type $ip
+     * @param type $ipGiven
      * @return string|int
      */
-    protected function convertIpToNumber($ip)
+    protected function convertIpToNumber($ipGiven)
     {
         $sReturn = '';
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                $ips     = explode('.', $ip);
+        if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
+            if (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $ips     = explode('.', $ipGiven);
                 $sReturn = $ips[3] + $ips[2] * 256 + $ips[1] * 65536 + $ips[0] * 16777216;
-            } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            } elseif (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
                 $binNum = '';
-                foreach (unpack('C*', inet_pton($ip)) as $byte) {
+                foreach (unpack('C*', inet_pton($ipGiven)) as $byte) {
                     $binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
                 }
                 $sReturn = base_convert(ltrim($binNum, '0'), 2, 10);
