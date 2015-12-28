@@ -83,7 +83,7 @@ class BrowserAgentInfosByDanielGPTest extends PHPUnit_Framework_TestCase
             'Browser',
             'Device',
             'OS',
-                ], 'c:\\Users\\e303778\\AppData\\LocalLow\\Temp');
+                ], 'd:\\www\\other\\temp\\PHP\\PHP56\\');
         // Assert
         $this->assertNotEmpty($a);
     }
