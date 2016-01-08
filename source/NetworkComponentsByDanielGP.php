@@ -109,16 +109,21 @@ trait NetworkComponentsByDanielGP
                 $ips     = explode('.', $ipGiven);
                 $sReturn = $ips[3] + $ips[2] * 256 + $ips[1] * 65536 + $ips[0] * 16777216;
             } elseif (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-                $binNum = '';
-                foreach (unpack('C*', inet_pton($ipGiven)) as $byte) {
-                    $binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
-                }
-                $sReturn = base_convert(ltrim($binNum, '0'), 2, 10);
+                $sReturn = $this->convertIpV6ToNumber($ipGiven);
             }
         } else {
             $sReturn = 'invalid IP';
         }
         return $sReturn;
+    }
+
+    private function convertIpV6ToNumber($ipGiven)
+    {
+        $binNum = '';
+        foreach (unpack('C*', inet_pton($ipGiven)) as $byte) {
+            $binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
+        }
+        return base_convert(ltrim($binNum, '0'), 2, 10);
     }
 
     /**
@@ -128,26 +133,8 @@ trait NetworkComponentsByDanielGP
      */
     protected function getClientRealIpAddress()
     {
-        $aPatterns = [
-            'HTTP_CLIENT_IP',
-            'HTTP_X_FORWARDED_FOR',
-            'HTTP_X_FORWARDED',
-            'HTTP_X_CLUSTER_CLIENT_IP',
-            'HTTP_FORWARDED_FOR',
-            'HTTP_FORWARDED',
-            'REMOTE_ADDR',
-        ];
-        $finalIP   = null;
-        foreach ($aPatterns as $key) {
-            if (array_key_exists($key, $_SERVER) === true) {
-                foreach (explode(',', $_SERVER[$key]) as $IPaddress) {
-                    $IPaddress = trim($IPaddress); // Just to be safe
-                    if (filter_var($IPaddress, FILTER_VALIDATE_IP) !== false) {
-                        $finalIP = $IPaddress;
-                    }
-                }
-            }
-        }
-        return $finalIP;
+        $rqst         = new \Symfony\Component\HttpFoundation\Request;
+        $superGlobals = $rqst->createFromGlobals();
+        return $superGlobals->getClientIp();
     }
 }
