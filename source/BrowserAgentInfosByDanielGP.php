@@ -228,16 +228,14 @@ trait BrowserAgentInfosByDanielGP
      */
     protected function getUserAgentByCommonLib()
     {
-        $crtUserAgent = '';
-        if (isset($_GET['ua'])) {
-            $crtUserAgent = $_GET['ua'];
-        } else {
-            if (isset($_SERVER['HTTP_USER_AGENT'])) {
-                $crtUserAgent = filter_var($_SERVER['HTTP_USER_AGENT'], FILTER_UNSAFE_RAW, FILTER_NULL_ON_FAILURE);
-            } elseif (PHP_SAPI === 'cli' || empty($_SERVER['REMOTE_ADDR'])) {  // command line
-                $crtUserAgent = 'PHP/' . PHP_VERSION . ' comand-line';
-            }
+        $this->autoPopulateSuperGlobals();
+        if (!is_null($this->brServerGlobals->get('ua'))) {
+            return $this->brServerGlobals->get('ua');
         }
-        return $crtUserAgent;
+        if (!is_null($this->brServerGlobals->server->get('HTTP_USER_AGENT'))) {
+            return $this->brServerGlobals->server->get('HTTP_USER_AGENT');
+        } elseif (PHP_SAPI === 'cli' || empty($this->brServerGlobals->server->get('REMOTE_ADDR'))) {  // command line
+            return 'PHP/' . PHP_VERSION . ' comand-line';
+        }
     }
 }
