@@ -36,6 +36,19 @@ namespace danielgp\browser_agent_info;
 trait BrowserAgentInfosByDanielGP
 {
 
+    use \danielgp\network_components\NetworkComponentsByDanielGP,
+        ArchiecturesCpu;
+
+    private $brServerGlobals = null;
+
+    private function autoPopulateSuperGlobals()
+    {
+        if (is_null($this->brServerGlobals)) {
+            $rqst                  = new \Symfony\Component\HttpFoundation\Request;
+            $this->brServerGlobals = $rqst->createFromGlobals();
+        }
+    }
+
     /**
      * Return CPU architecture details from given user agent
      *
@@ -136,19 +149,18 @@ trait BrowserAgentInfosByDanielGP
      */
     private function getClientBrowserAccepted()
     {
-        $sReturn = [];
-        if (isset($_SERVER['HTTP_ACCEPT'])) {
-            $sReturn['accept'] = $_SERVER['HTTP_ACCEPT'];
-        }
+        $this->autoPopulateSuperGlobals();
+        $sReturn = [
+            'accept'          => $this->brServerGlobals->server->get('HTTP_ACCEPT'),
+            'accept_encoding' => $this->brServerGlobals->server->get('HTTP_ACCEPT_ENCODING'),
+        ];
         if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
             $sReturn['accept_charset'] = $_SERVER['HTTP_ACCEPT_CHARSET'];
         }
-        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-            $sReturn['accept_encoding'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
-        }
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $sReturn['accept_language']     = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-            preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $prfd);
+        if (!is_null($this->brServerGlobals->server->get('HTTP_ACCEPT_LANGUAGE'))) {
+            $sReturn['accept_language']     = $this->brServerGlobals->server->get('HTTP_ACCEPT_LANGUAGE');
+            $prfd                           = null;
+            preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $sReturn['accept_language'], $prfd);
             $sReturn['preferred locale']    = $prfd[0];
             $sReturn['preferred languages'] = array_values(array_unique(array_values($prfd[1])));
         }
@@ -202,7 +214,8 @@ trait BrowserAgentInfosByDanielGP
      */
     private function getClientBrowserDevice(\DeviceDetector\DeviceDetector $deviceDetectorClass)
     {
-        $clientIp = $this->getClientRealIpAddress();
+        $this->autoPopulateSuperGlobals();
+        $clientIp = $this->brServerGlobals->getClientIp();
         return [
             'brand'     => $deviceDetectorClass->getDeviceName(),
             'ip'        => $clientIp,
@@ -250,55 +263,5 @@ trait BrowserAgentInfosByDanielGP
             }
         }
         return $crtUserAgent;
-    }
-
-    /**
-     * Holds a list of Known CPU Srchitectures as array
-     *
-     * @return array
-     */
-    private function listOfKnownCpuArchitectures()
-    {
-        return [
-            'amd64' => [
-                'bits'          => 64,
-                'nick'          => 'x64',
-                'name'          => 'AMD/Intel x64',
-                'name and bits' => 'AMD/Intel x64 (64 bit)',
-            ],
-            'arm'   => [
-                'bits'          => 32,
-                'nick'          => 'ARM',
-                'name'          => 'Advanced RISC Machine',
-                'name and bits' => 'Advanced RISC Machine (32 bit)',
-            ],
-            'arm64' => [
-                'bits'          => 64,
-                'nick'          => 'ARM64',
-                'name'          => 'Advanced RISC Machine',
-                'name and bits' => 'Advanced RISC Machine (64 bit)',
-            ],
-            'ia32'  => [
-                'bits'          => 32,
-                'nick'          => 'x86',
-                'name'          => 'Intel x86',
-                'name and bits' => 'Intel x86 (32 bit)',
-            ],
-            'ppc'   => [
-                'bits'          => 32,
-                'name'          => 'Power PC',
-                'name and bits' => 'Power PC (32 bit)',
-            ],
-            'ppc64' => [
-                'bits'          => 64,
-                'name'          => 'Power PC',
-                'name and bits' => 'Power PC (64 bit)',
-            ],
-            'sun'   => [
-                'bits'          => 64,
-                'name'          => 'Sun Sparc',
-                'name and bits' => 'Sun Sparc (64 bit)',
-            ],
-        ];
     }
 }
