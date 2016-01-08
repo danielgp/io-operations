@@ -84,21 +84,19 @@ trait BrowserAgentInfosByDanielGP
      */
     private function getClientBrowser(\DeviceDetector\DeviceDetector $deviceDetectorClass, $userAgent)
     {
-        $browserClass       = new \DeviceDetector\Parser\Client\Browser();
-        $browserFamily      = $browserClass->getBrowserFamily($deviceDetectorClass->getClient('short_name'));
+        $this->autoPopulateSuperGlobals();
         $browserInfoArray   = [
             'architecture' => $this->getArchitectureFromUserAgent($userAgent, 'browser'),
-            'connection'   => (isset($_SERVER['HTTP_CONNECTION']) ? $_SERVER['HTTP_CONNECTION'] : ''),
-            'family'       => ($browserFamily !== false ? $browserFamily : '---'),
-            'host'         => (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ''),
-            'referrer'     => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
+            'connection'   => $this->brServerGlobals->server->get('HTTP_CONNECTION'),
+            'family'       => $this->getClientBrowserFamily($deviceDetectorClass),
+            'host'         => $this->brServerGlobals->server->get('HTTP_HOST'),
+            'referrer'     => $this->brServerGlobals->headers->get('referer'),
             'user_agent'   => $this->getUserAgentByCommonLib(),
         ];
         $browserInformation = array_merge($browserInfoArray, $this->getClientBrowserAccepted());
         $clientDetails      = $deviceDetectorClass->getClient();
         if (is_array($clientDetails)) {
             $browserInformation                  = array_merge($browserInformation, $clientDetails);
-            // more digestable details about version
             $browserInformation['version_major'] = explode('.', $browserInformation['version'])[0];
             $browserInformation['version_minor'] = explode('.', $browserInformation['version'])[1];
         }
