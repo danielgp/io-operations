@@ -67,6 +67,7 @@ trait ArchiecturesCpu
     {
         $outCompleteArray = [];
         foreach ($inSingleArray as $keyS => $valueS) {
+            $trnkArray                  = [];
             $trnkArray['name and bits'] = $valueS['name'] . ' (' . $valueS['bits'] . ' bit)';
             $value2                     = array_merge($valueS, $trnkArray);
             ksort($value2);
@@ -107,7 +108,7 @@ trait ArchiecturesCpu
     protected function getArchitectureFromUserAgentBrowser($usrA)
     {
         $knownArchitectures = $this->listOfKnownCpuArchitectures();
-        if ($this->detectX64Architecture($usrA) == 'ia32') {
+        if ($this->detectX86Architecture($usrA) == 'ia32') {
             $aReturn = $knownArchitectures['ia32'];
         } elseif (strpos($usrA, 'Android;')) {
             $aReturn = $knownArchitectures['arm'];

@@ -58,7 +58,6 @@ trait BrowserAgentInfosByDanielGP
      */
     protected function getArchitectureFromUserAgent($userAgent, $targetToAnalyze = 'os')
     {
-        $aReturn = [];
         switch ($targetToAnalyze) {
             case 'browser':
                 $aReturn = $this->getArchitectureFromUserAgentBrowser($userAgent);
@@ -67,9 +66,7 @@ trait BrowserAgentInfosByDanielGP
                 $aReturn = $this->getArchitectureFromUserAgentOperatingSystem($userAgent);
                 break;
             default:
-                $aReturn = [
-                    'name' => '---'
-                ];
+                $aReturn = ['name' => '---'];
                 break;
         }
         return $aReturn;
@@ -142,7 +139,7 @@ trait BrowserAgentInfosByDanielGP
         $devDetectClass->parse();
         if ($devDetectClass->isBot()) {
             $aReturn = [
-                'Bot' => $devDetectClass->getBot(), // handle bots,spiders,crawlers,...
+                'Bot' => $devDetectClass->getBot(),
             ];
         } else {
             $aReturn = [];
@@ -176,7 +173,7 @@ trait BrowserAgentInfosByDanielGP
         return [
             'brand'     => $deviceDetectorClass->getDeviceName(),
             'ip'        => $clientIp,
-            'ip direct' => filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
+            'ip direct' => $this->brServerGlobals->server->get('REMOTE_ADDR'),
             'ip type'   => $this->checkIpIsPrivate($clientIp),
             'ip v4/v6'  => $this->checkIpIsV4OrV6($clientIp),
             'model'     => $deviceDetectorClass->getModel(),
