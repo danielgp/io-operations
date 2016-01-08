@@ -93,13 +93,8 @@ trait BrowserAgentInfosByDanielGP
             'referrer'     => $this->brServerGlobals->headers->get('referer'),
             'user_agent'   => $this->getUserAgentByCommonLib(),
         ];
-        $browserInformation = array_merge($browserInfoArray, $this->getClientBrowserAccepted());
-        $clientDetails      = $deviceDetectorClass->getClient();
-        if (is_array($clientDetails)) {
-            $browserInformation                  = array_merge($browserInformation, $clientDetails);
-            $browserInformation['version_major'] = explode('.', $browserInformation['version'])[0];
-            $browserInformation['version_minor'] = explode('.', $browserInformation['version'])[1];
-        }
+        $vrs                = $this->getClientBrowserVersion($deviceDetectorClass);
+        $browserInformation = array_merge($browserInfoArray, $this->getClientBrowserAccepted(), $vrs);
         ksort($browserInformation);
         return $browserInformation;
     }
@@ -212,6 +207,18 @@ trait BrowserAgentInfosByDanielGP
         $aReturn['family']       = ($osFamily !== false ? $osFamily : 'Unknown');
         ksort($aReturn);
         return $aReturn;
+    }
+
+    private function getClientBrowserVersion(\DeviceDetector\DeviceDetector $deviceDetectorClass)
+    {
+        $clientDetails = $deviceDetectorClass->getClient();
+        if (is_array($clientDetails['version'])) {
+            return [
+                'version_major' => explode('.', $clientDetails['version'])[0],
+                'version_minor' => explode('.', $clientDetails['version'])[1],
+            ];
+        }
+        return [];
     }
 
     /**
