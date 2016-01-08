@@ -75,42 +75,6 @@ trait BrowserAgentInfosByDanielGP
         return $aReturn;
     }
 
-    private function getArchitectureFromUserAgentBrowser($usrA)
-    {
-        $knownArchitectures = $this->listOfKnownCpuArchitectures();
-        if (strpos($usrA, 'i386') || strpos($usrA, 'i586') || strpos($usrA, 'ia32;')) {
-            $aReturn = $knownArchitectures['ia32'];
-        } elseif (strpos($usrA, 'WOW64') || strpos($usrA, 'x86;')) {
-            $aReturn = $knownArchitectures['ia32'];
-        } elseif (strpos($usrA, 'Android;')) {
-            $aReturn = $knownArchitectures['arm'];
-        } elseif (strpos(strtolower($usrA), 'amd64;') || strpos($usrA, 'AMD64') || strpos($usrA, 'x86_64;')) {
-            $aReturn = $knownArchitectures['amd64'];
-        } elseif (strpos($usrA, 'Win64;') && strpos($usrA, 'x64;')) {
-            $aReturn = $knownArchitectures['amd64'];
-        } else {
-            $aReturn = $knownArchitectures['ia32'];
-        }
-        return $aReturn;
-    }
-
-    private function getArchitectureFromUserAgentOperatingSystem($usrA)
-    {
-        $knowCpuArchitecture = $this->listOfKnownCpuArchitectures();
-        if (strpos($usrA, 'x86_64;') || strpos($usrA, 'x86-64;') || strpos($usrA, 'Win64;') || strpos($usrA, 'x64;')) {
-            $aReturn = $knowCpuArchitecture['amd64'];
-        } elseif (strpos(strtolower($usrA), 'amd64;') || strpos($usrA, 'AMD64')) {
-            $aReturn = $knowCpuArchitecture['amd64'];
-        } elseif (strpos($usrA, 'WOW64') || strpos($usrA, 'x64_64;')) {
-            $aReturn = $knowCpuArchitecture['amd64'];
-        } elseif (strpos($usrA, 'Android;')) {
-            $aReturn = $knowCpuArchitecture['arm'];
-        } else {
-            $aReturn = $knowCpuArchitecture['ia32'];
-        }
-        return $aReturn;
-    }
-
     /**
      * Provides details about browser
      *
@@ -225,6 +189,13 @@ trait BrowserAgentInfosByDanielGP
             'model'     => $deviceDetectorClass->getModel(),
             'name'      => $deviceDetectorClass->getBrandName(),
         ];
+    }
+
+    private function getClientBrowserFamily(\DeviceDetector\DeviceDetector $deviceDetectorClass)
+    {
+        $browserClass  = new \DeviceDetector\Parser\Client\Browser();
+        $browserFamily = $browserClass->getBrowserFamily($deviceDetectorClass->getClient('short_name'));
+        return ($browserFamily !== false ? $browserFamily : '---');
     }
 
     /**
