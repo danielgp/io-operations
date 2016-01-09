@@ -213,9 +213,10 @@ trait BrowserAgentInfosByDanielGP
     private function getClientBrowserVersion(\DeviceDetector\DeviceDetector $deviceDetectorClass)
     {
         $clientDetails = $deviceDetectorClass->getClient();
-        if (is_array($clientDetails['version'])) {
-            $clientDetails['version_major'] = explode('.', $clientDetails['version'])[0];
-            $clientDetails['version_minor'] = explode('.', $clientDetails['version'])[1];
+        if (isset($clientDetails['version']) && (strpos($clientDetails['version'], '.') !== false)) {
+            $vrs                            = explode('.', $clientDetails['version']);
+            $clientDetails['version_major'] = $vrs[0];
+            $clientDetails['version_minor'] = $vrs[1];
         }
         return $clientDetails;
     }
