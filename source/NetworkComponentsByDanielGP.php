@@ -133,8 +133,7 @@ trait NetworkComponentsByDanielGP
      */
     protected function getClientRealIpAddress()
     {
-        $rqst         = new \Symfony\Component\HttpFoundation\Request;
-        $superGlobals = $rqst->createFromGlobals();
-        return $superGlobals->getClientIp();
+        $rqst = new \Symfony\Component\HttpFoundation\Request;
+        return $rqst->getClientIp();
     }
 }
