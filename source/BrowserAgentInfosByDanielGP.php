@@ -214,12 +214,10 @@ trait BrowserAgentInfosByDanielGP
     {
         $clientDetails = $deviceDetectorClass->getClient();
         if (is_array($clientDetails['version'])) {
-            return [
-                'version_major' => explode('.', $clientDetails['version'])[0],
-                'version_minor' => explode('.', $clientDetails['version'])[1],
-            ];
+            $clientDetails['version_major'] = explode('.', $clientDetails['version'])[0];
+            $clientDetails['version_minor'] = explode('.', $clientDetails['version'])[1];
         }
-        return [];
+        return $clientDetails;
     }
 
     /**
