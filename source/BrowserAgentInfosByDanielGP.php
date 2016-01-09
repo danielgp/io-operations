@@ -138,23 +138,27 @@ trait BrowserAgentInfosByDanielGP
         $devDetectClass->discardBotInformation();
         $devDetectClass->parse();
         if ($devDetectClass->isBot()) {
-            $aReturn = [
+            return [
                 'Bot' => $devDetectClass->getBot(),
             ];
-        } else {
-            $aReturn = [];
-            foreach ($returnType as $value) {
-                switch ($value) {
-                    case 'Browser':
-                        $aReturn[$value] = $this->getClientBrowser($devDetectClass, $userAgent);
-                        break;
-                    case 'Device':
-                        $aReturn[$value] = $this->getClientBrowserDevice($devDetectClass);
-                        break;
-                    case 'OS':
-                        $aReturn[$value] = $this->getClientBrowserOperatingSystem($devDetectClass, $userAgent);
-                        break;
-                }
+        }
+        return $this->getClientBrowserDetailsNonBot($devDetectClass, $userAgent, $returnType);
+    }
+
+    private function getClientBrowserDetailsNonBot(\DeviceDetector\DeviceDetector $devDetectClass, $uAg, $rtrnTypAry)
+    {
+        $aReturn = [];
+        foreach ($rtrnTypAry as $value) {
+            switch ($value) {
+                case 'Browser':
+                    $aReturn[$value] = $this->getClientBrowser($devDetectClass, $uAg);
+                    break;
+                case 'Device':
+                    $aReturn[$value] = $this->getClientBrowserDevice($devDetectClass);
+                    break;
+                case 'OS':
+                    $aReturn[$value] = $this->getClientBrowserOperatingSystem($devDetectClass, $uAg);
+                    break;
             }
         }
         return $aReturn;
