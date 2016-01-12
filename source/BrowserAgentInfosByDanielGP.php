@@ -147,19 +147,24 @@ trait BrowserAgentInfosByDanielGP
     {
         $aReturn = [];
         foreach ($rtrnTypAry as $value) {
-            switch ($value) {
-                case 'Browser':
-                    $aReturn[$value] = $this->getClientBrowser($devDetectClass, $uAg);
-                    break;
-                case 'Device':
-                    $aReturn[$value] = $this->getClientBrowserDevice($devDetectClass);
-                    break;
-                case 'OS':
-                    $aReturn[$value] = $this->getClientBrowserOperatingSystem($devDetectClass, $uAg);
-                    break;
-            }
+            $aReturn[$value] = $this->getClientBrowserDetailsSingle($devDetectClass, $uAg, $value);
         }
         return $aReturn;
+    }
+
+    private function getClientBrowserDetailsSingle(\DeviceDetector\DeviceDetector $devDetectClass, $uAg, $value)
+    {
+        switch ($value) {
+            case 'Browser':
+                return $this->getClientBrowser($devDetectClass, $uAg);
+            // intentionally left blank
+            case 'Device':
+                return $this->getClientBrowserDevice($devDetectClass);
+            // intentionally left blank
+            case 'OS':
+                return $this->getClientBrowserOperatingSystem($devDetectClass, $uAg);
+            // intentionally left blank
+        }
     }
 
     /**
