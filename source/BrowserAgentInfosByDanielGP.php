@@ -147,19 +147,24 @@ trait BrowserAgentInfosByDanielGP
     {
         $aReturn = [];
         foreach ($rtrnTypAry as $value) {
-            switch ($value) {
-                case 'Browser':
-                    $aReturn[$value] = $this->getClientBrowser($devDetectClass, $uAg);
-                    break;
-                case 'Device':
-                    $aReturn[$value] = $this->getClientBrowserDevice($devDetectClass);
-                    break;
-                case 'OS':
-                    $aReturn[$value] = $this->getClientBrowserOperatingSystem($devDetectClass, $uAg);
-                    break;
-            }
+            $aReturn[$value] = $this->getClientBrowserDetailsSingle($devDetectClass, $uAg, $value);
         }
         return $aReturn;
+    }
+
+    private function getClientBrowserDetailsSingle(\DeviceDetector\DeviceDetector $devDetectClass, $uAg, $value)
+    {
+        switch ($value) {
+            case 'Browser':
+                return $this->getClientBrowser($devDetectClass, $uAg);
+            // intentionally left blank
+            case 'Device':
+                return $this->getClientBrowserDevice($devDetectClass);
+            // intentionally left blank
+            case 'OS':
+                return $this->getClientBrowserOperatingSystem($devDetectClass, $uAg);
+            // intentionally left blank
+        }
     }
 
     /**
@@ -230,9 +235,14 @@ trait BrowserAgentInfosByDanielGP
         if (!is_null($this->brServerGlobals->get('ua'))) {
             return $this->brServerGlobals->get('ua');
         }
+        return $this->getUserAgentByCommonLibDetection();
+    }
+
+    private function getUserAgentByCommonLibDetection()
+    {
         if (!is_null($this->brServerGlobals->server->get('HTTP_USER_AGENT'))) {
             return $this->brServerGlobals->server->get('HTTP_USER_AGENT');
-        } elseif (PHP_SAPI === 'cli' || empty($this->brServerGlobals->server->get('REMOTE_ADDR'))) {  // command line
+        } elseif (PHP_SAPI === 'cli' || empty($this->brServerGlobals->server->get('REMOTE_ADDR'))) { // command line
             return 'PHP/' . PHP_VERSION . ' comand-line';
         }
     }
