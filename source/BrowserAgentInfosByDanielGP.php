@@ -106,11 +106,9 @@ trait BrowserAgentInfosByDanielGP
         $this->autoPopulateSuperGlobals();
         $sReturn = [
             'accept'          => $this->brServerGlobals->server->get('HTTP_ACCEPT'),
+            'accept_charset'  => $this->brServerGlobals->headers->get('Accept-Charset'),
             'accept_encoding' => $this->brServerGlobals->server->get('HTTP_ACCEPT_ENCODING'),
         ];
-        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
-            $sReturn['accept_charset'] = $_SERVER['HTTP_ACCEPT_CHARSET'];
-        }
         if (!is_null($this->brServerGlobals->server->get('HTTP_ACCEPT_LANGUAGE'))) {
             $sReturn['accept_language']     = $this->brServerGlobals->server->get('HTTP_ACCEPT_LANGUAGE');
             $prfd                           = null;
