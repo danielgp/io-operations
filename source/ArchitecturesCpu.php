@@ -45,7 +45,7 @@ trait ArchiecturesCpu
         $idn      = ['amd64;', 'AMD64', 'x86_64;'];
         $byPatern = ($this->eVlByAltSubstrings($idn, $usrA, 'ia32') === 'ia32');
         $sReturn  = '';
-        if ($byPatern || (strpos($usrA, 'Win64;') && strpos($usrA, 'x64;'))) {
+        if ($byPatern || (strpos($usrA, 'Win64;') && strpos($usrA, 'x64'))) {
             $sReturn = 'amd64';
         }
         return $sReturn;
