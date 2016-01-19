@@ -61,17 +61,14 @@ trait NetworkComponentsByDanielGP
      */
     protected function checkIpIsPrivate($ipGiven)
     {
-        $ipType = 'unkown';
+        $ipType = 'invalid';
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (!filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
-                $ipType = 'private';
-            } else {
-                $ipType = 'public';
+                return 'private';
             }
-        } else {
-            $ipType = 'invalid';
+            return 'public';
         }
-        return $ipType;
+        return 'invalid';
     }
 
     /**
