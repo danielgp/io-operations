@@ -61,14 +61,13 @@ trait NetworkComponentsByDanielGP
      */
     protected function checkIpIsPrivate($ipGiven)
     {
-        $ipType = 'invalid';
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (!filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
                 return 'private';
             }
             return 'public';
         }
-        return 'invalid';
+        return 'invalid IP';
     }
 
     /**
@@ -79,17 +78,14 @@ trait NetworkComponentsByDanielGP
      */
     protected function checkIpIsV4OrV6($ipGiven)
     {
-        $ipType = 'unkown';
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                $ipType = 'V4';
+                return 'V4';
             } elseif (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-                $ipType = 'V6';
+                return 'V6';
             }
-        } else {
-            $ipType = 'invalid';
         }
-        return $ipType;
+        return 'invalid IP';
     }
 
     /**
@@ -100,18 +96,15 @@ trait NetworkComponentsByDanielGP
      */
     protected function convertIpToNumber($ipGiven)
     {
-        $sReturn = '';
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                $ips     = explode('.', $ipGiven);
-                $sReturn = $ips[3] + $ips[2] * 256 + $ips[1] * 65536 + $ips[0] * 16777216;
+                $ips = explode('.', $ipGiven);
+                return $ips[3] + $ips[2] * 256 + $ips[1] * 65536 + $ips[0] * 16777216;
             } elseif (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-                $sReturn = $this->convertIpV6ToNumber($ipGiven);
+                return $this->convertIpV6ToNumber($ipGiven);
             }
-        } else {
-            $sReturn = 'invalid IP';
         }
-        return $sReturn;
+        return 'invalid IP';
     }
 
     private function convertIpV6ToNumber($ipGiven)
