@@ -124,6 +124,6 @@ trait NetworkComponentsByDanielGP
     protected function getClientRealIpAddress()
     {
         $rqst = new \Symfony\Component\HttpFoundation\Request;
-        return $rqst->getClientIp();
+        return $rqst->createFromGlobals()->getClientIp();
     }
 }
