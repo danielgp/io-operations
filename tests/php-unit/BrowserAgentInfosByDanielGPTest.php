@@ -28,8 +28,7 @@
 class BrowserAgentInfosByDanielGPTest extends PHPUnit_Framework_TestCase
 {
 
-    use \danielgp\browser_agent_info\BrowserAgentInfosByDanielGP,
-        \danielgp\network_components\NetworkComponentsByDanielGP;
+    use \danielgp\browser_agent_info\BrowserAgentInfosByDanielGP;
 
     public function testArchitectureBrowserAMD64()
     {
