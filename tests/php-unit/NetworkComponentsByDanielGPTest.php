@@ -51,7 +51,7 @@ class NetworkComponentsByDanielGPTest extends PHPUnit_Framework_TestCase
         // Arrange
         $a = $this->checkIpIsPrivate('192.168');
         // Assert
-        $this->assertEquals('invalid', $a);
+        $this->assertEquals('invalid IP', $a);
     }
 
     public function testCheckIpIsPrivateEqualPrivate()
@@ -75,7 +75,7 @@ class NetworkComponentsByDanielGPTest extends PHPUnit_Framework_TestCase
         // Arrange
         $a = $this->checkIpIsV4OrV6('192.168');
         // Assert
-        $this->assertEquals('invalid', $a);
+        $this->assertEquals('invalid IP', $a);
     }
 
     public function testCheckIpIsV4OrV6EqualV4()
