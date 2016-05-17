@@ -1,0 +1,14 @@
+NetworkComponentsByDanielGP
+ [x] Check ip is in range in
+ [x] Check ip is in range out
+ [x] Check ip is private equal invalid
+ [x] Check ip is private equal private
+ [x] Check ip is private equal public
+ [x] Check ip is v 4 or v 6 equal invalid
+ [x] Check ip is v 4 or v 6 equal v 4
+ [x] Check ip is v 4 or v 6 equal v 6
+ [x] Convert ip to number
+ [x] Convert ip to number invlid i p
+ [x] Convert ip to number of ip v 6
+ [x] Get client real ip address
+
