@@ -1,0 +1,165 @@
+{
+    "event": "suiteStart",
+    "suite": "",
+    "tests": 12
+}{
+    "event": "suiteStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "tests": 12
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsInRangeIn"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsInRangeIn",
+    "status": "pass",
+    "time": 0.035447120666504,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsInRangeOut"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsInRangeOut",
+    "status": "pass",
+    "time": 0.026992082595825,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsPrivateEqualInvalid"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsPrivateEqualInvalid",
+    "status": "pass",
+    "time": 0.026607990264893,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsPrivateEqualPrivate"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsPrivateEqualPrivate",
+    "status": "pass",
+    "time": 0.025511980056763,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsPrivateEqualPublic"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsPrivateEqualPublic",
+    "status": "pass",
+    "time": 0.025331974029541,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsV4OrV6EqualInvalid"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsV4OrV6EqualInvalid",
+    "status": "pass",
+    "time": 0.025518894195557,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsV4OrV6EqualV4"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsV4OrV6EqualV4",
+    "status": "pass",
+    "time": 0.026365995407104,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsV4OrV6EqualV6"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testCheckIpIsV4OrV6EqualV6",
+    "status": "pass",
+    "time": 0.025516033172607,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testConvertIpToNumber"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testConvertIpToNumber",
+    "status": "pass",
+    "time": 0.025349855422974,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testConvertIpToNumberInvlidIP"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testConvertIpToNumberInvlidIP",
+    "status": "pass",
+    "time": 0.028097152709961,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testConvertIpToNumberOfIpV6"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testConvertIpToNumberOfIpV6",
+    "status": "pass",
+    "time": 0.07121205329895,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testGetClientRealIpAddress"
+}{
+    "event": "test",
+    "suite": "NetworkComponentsByDanielGPTest",
+    "test": "NetworkComponentsByDanielGPTest::testGetClientRealIpAddress",
+    "status": "pass",
+    "time": 0.059683799743652,
+    "trace": [],
+    "message": "",
+    "output": ""
+}

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="12" assertions="12" failures="0" errors="0" time="0.769039">
-    <testsuite name="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" tests="12" assertions="12" failures="0" errors="0" time="0.769039">
-      <testcase name="testCheckIpIsInRangeIn" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="33" assertions="1" time="0.038758"/>
-      <testcase name="testCheckIpIsInRangeOut" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="41" assertions="1" time="0.027657"/>
-      <testcase name="testCheckIpIsPrivateEqualInvalid" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="49" assertions="1" time="0.037489"/>
-      <testcase name="testCheckIpIsPrivateEqualPrivate" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="57" assertions="1" time="0.049841"/>
-      <testcase name="testCheckIpIsPrivateEqualPublic" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="65" assertions="1" time="0.044723"/>
-      <testcase name="testCheckIpIsV4OrV6EqualInvalid" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="73" assertions="1" time="0.037546"/>
-      <testcase name="testCheckIpIsV4OrV6EqualV4" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="81" assertions="1" time="0.284158"/>
-      <testcase name="testCheckIpIsV4OrV6EqualV6" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="89" assertions="1" time="0.046147"/>
-      <testcase name="testConvertIpToNumber" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="97" assertions="1" time="0.028715"/>
-      <testcase name="testConvertIpToNumberInvlidIP" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="105" assertions="1" time="0.039156"/>
-      <testcase name="testConvertIpToNumberOfIpV6" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="113" assertions="1" time="0.066859"/>
-      <testcase name="testGetClientRealIpAddress" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="121" assertions="1" time="0.067990"/>
+  <testsuite name="" tests="12" assertions="12" failures="0" errors="0" time="0.036443">
+    <testsuite name="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" tests="12" assertions="12" failures="0" errors="0" time="0.036443">
+      <testcase name="testCheckIpIsInRangeIn" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="33" assertions="1" time="0.006585"/>
+      <testcase name="testCheckIpIsInRangeOut" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="41" assertions="1" time="0.000469"/>
+      <testcase name="testCheckIpIsPrivateEqualInvalid" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="49" assertions="1" time="0.000404"/>
+      <testcase name="testCheckIpIsPrivateEqualPrivate" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="57" assertions="1" time="0.000325"/>
+      <testcase name="testCheckIpIsPrivateEqualPublic" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="65" assertions="1" time="0.000310"/>
+      <testcase name="testCheckIpIsV4OrV6EqualInvalid" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="73" assertions="1" time="0.000312"/>
+      <testcase name="testCheckIpIsV4OrV6EqualV4" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="81" assertions="1" time="0.000310"/>
+      <testcase name="testCheckIpIsV4OrV6EqualV6" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="89" assertions="1" time="0.000313"/>
+      <testcase name="testConvertIpToNumber" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="97" assertions="1" time="0.000312"/>
+      <testcase name="testConvertIpToNumberInvlidIP" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="105" assertions="1" time="0.000319"/>
+      <testcase name="testConvertIpToNumberOfIpV6" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="113" assertions="1" time="0.017624"/>
+      <testcase name="testGetClientRealIpAddress" class="NetworkComponentsByDanielGPTest" file="D:\Git\GitHub\danielgp.GitHub\network-components\tests\php-unit\NetworkComponentsByDanielGPTest.php" line="121" assertions="1" time="0.009160"/>
     </testsuite>
   </testsuite>
 </testsuites>
