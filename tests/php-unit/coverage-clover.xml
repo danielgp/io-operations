@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1529790215">
-  <project timestamp="1529790215">
+<coverage generated="1529795275">
+  <project timestamp="1529795275">
     <package name="danielgp\network_components">
       <file name="D:\www\Data\GitRepositories\GitHub\danielgp\network-components\source/NetworkComponentsByDanielGP.php">
         <class name="NetworkComponentsByDanielGP" namespace="danielgp\network_components">
