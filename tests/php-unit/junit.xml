@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="BrowserAgentTest" tests="7" assertions="7" errors="0" failures="0" skipped="0" time="18.096991">
+    <testsuite name="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" tests="7" assertions="7" errors="0" failures="0" skipped="0" time="18.096991">
+      <testcase name="testArchitectureBrowserAMD64" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="33" assertions="1" time="0.031294"/>
+      <testcase name="testArchitectureOperatingSystemAMD64" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="42" assertions="1" time="0.008019"/>
+      <testcase name="testArchitectureOperatingSystemARM" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="51" assertions="1" time="0.008347"/>
+      <testcase name="testArchitectureOperatingSystemIA32" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="60" assertions="1" time="0.009303"/>
+      <testcase name="testArchitectureOperatingSystemUnknown" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="69" assertions="1" time="0.006740"/>
+      <testcase name="testClientDetails" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="78" assertions="1" time="9.513328"/>
+      <testcase name="testClientDetailsNoCacheSpecified" class="BrowserAgentInfosByDanielGPTest" classname="BrowserAgentInfosByDanielGPTest" file="D:\www\Data\GitRepositories\GitHub\danielgp\browser-agent-info\tests\php-unit\BrowserAgentInfosByDanielGPTest.php" line="90" assertions="1" time="8.519961"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
