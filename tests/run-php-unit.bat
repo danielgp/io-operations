@@ -1,0 +1,1 @@
+C:\www\App\PHP\7.2.x64\php.exe -c C:\www\Config\PHP\7.2.x64+xDebug\php.ini D:\www\Data\GitRepositories\GitHub\danielgp\network-components\vendor\phpunit\phpunit\phpunit  --configuration D:\www\Data\GitRepositories\GitHub\danielgp\network-components\phpunit.xml

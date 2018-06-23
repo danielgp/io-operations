@@ -25,7 +25,7 @@
  * SOFTWARE.
  *
  */
-class NetworkComponentsByDanielGPTest extends PHPUnit_Framework_TestCase
+class NetworkComponentsByDanielGPTest extends \PHPUnit\Framework\TestCase
 {
 
     use \danielgp\network_components\NetworkComponentsByDanielGP;

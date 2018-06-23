@@ -11,14 +11,14 @@
         }
     ],
     "require": {
-        "php": "^5.6 || ^7.0",
-        "symfony/http-foundation": ">3.1"
+        "php": "^7.0 || ^7.2",
+        "symfony/http-foundation": "^4.1"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "~0.4",
-        "phpunit/phpunit": "~6.5",
-        "phpunit/php-code-coverage": "~5.3",
-        "squizlabs/php_codesniffer": "~3.2"
+        "phpunit/phpunit": "^7.2",
+        "phpunit/php-code-coverage": "^6",
+        "squizlabs/php_codesniffer": "^3.3"
     },
     "autoload": {
         "classmap": [
