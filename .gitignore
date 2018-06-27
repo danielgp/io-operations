@@ -1,8 +1,8 @@
 /nbproject/private/
 /vendor/
 composer.lock
-/tests/php-code-sniffer/
-/tests/php-unit/coverage.html/
+/tests/php-code-sniffer/*
+/tests/php-unit/coverage.html/*
 /tests/php-unit/coverage-clover.xml
 /tests/php-unit/junit.xml
 /tests/php-unit/testdox.html
