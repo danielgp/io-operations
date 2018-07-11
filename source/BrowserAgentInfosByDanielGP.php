@@ -44,7 +44,7 @@ trait BrowserAgentInfosByDanielGP
     private function autoPopulateSuperGlobals()
     {
         if (is_null($this->brServerGlobals)) {
-            $rqst                  = new \Symfony\Component\HttpFoundation\Request;
+            $rqst                  = new \Symfony\Component\HttpFoundation\Request();
             $this->brServerGlobals = $rqst->createFromGlobals();
         }
     }
