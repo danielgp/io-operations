@@ -55,8 +55,10 @@ THE SOFTWARE.
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="tests/php-unit/coverage.html" lowUpperBound="35" highLowerBound="70" />
-        <log type="coverage-clover" target="tests/php-unit/coverage-clover.xml" />
-        <log type="junit" target="tests/php-unit/junit.xml"/>
+        <log type="coverage-html" target="tests/php-unit/results/coverage.html" lowUpperBound="35" highLowerBound="70" />
+        <log type="coverage-clover" target="tests/php-unit/results/coverage-clover.xml" />
+        <log type="junit" target="tests/php-unit/results/junit.xml"/>
+        <log type="testdox-html" target="tests/php-unit/results/testdox.html"/>
+        <log type="testdox-text" target="tests/php-unit/results/testdox.txt"/>
     </logging>  
 </phpunit>
