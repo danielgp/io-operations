@@ -39,7 +39,7 @@ trait NetworkComponentsByDanielGP
      * @param ipv4 $ipEnd
      * @return string
      */
-    protected function checkIpIsInRange($ipGiven, $ipStart, $ipEnd)
+    public function checkIpIsInRange($ipGiven, $ipStart, $ipEnd)
     {
         $sReturn     = 'out';
         $startNo     = $this->convertIpToNumber($ipStart);
@@ -59,7 +59,7 @@ trait NetworkComponentsByDanielGP
      * @param ipv4 $ipGiven
      * @return string
      */
-    protected function checkIpIsPrivate($ipGiven)
+    public function checkIpIsPrivate($ipGiven)
     {
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (!filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
@@ -76,7 +76,7 @@ trait NetworkComponentsByDanielGP
      * @param ipv4 $ipGiven
      * @return string
      */
-    protected function checkIpIsV4OrV6($ipGiven)
+    public function checkIpIsV4OrV6($ipGiven)
     {
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
@@ -94,7 +94,7 @@ trait NetworkComponentsByDanielGP
      * @param type $ipGiven
      * @return string|int
      */
-    protected function convertIpToNumber($ipGiven)
+    public function convertIpToNumber($ipGiven)
     {
         if (filter_var($ipGiven, FILTER_VALIDATE_IP)) {
             if (filter_var($ipGiven, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
@@ -121,7 +121,7 @@ trait NetworkComponentsByDanielGP
      *
      * @return string
      */
-    protected function getClientRealIpAddress()
+    public function getClientRealIpAddress()
     {
         $rqst = new \Symfony\Component\HttpFoundation\Request();
         return $rqst->createFromGlobals()->getClientIp();
