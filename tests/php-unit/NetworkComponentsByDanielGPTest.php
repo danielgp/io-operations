@@ -25,102 +25,99 @@
  * SOFTWARE.
  *
  */
+ 
+ namespace danielgp\network_components;
+ 
 class NetworkComponentsByDanielGPTest extends \PHPUnit\Framework\TestCase
 {
 
-    use \danielgp\network_components\NetworkComponentsByDanielGP;
+    public static function setUpBeforeClass()
+    {
+        require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'source', __DIR__)
+            . DIRECTORY_SEPARATOR . 'NetworkComponentsByDanielGP.php';
+    }
 
     public function testCheckIpIsInRangeIn()
     {
-        // Arrange
-        $a = $this->checkIpIsInRange('160.221.78.69', '160.221.78.1', '160.221.79.254');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsInRange('160.221.78.69', '160.221.78.1', '160.221.79.254');
         $this->assertEquals('in', $a);
     }
 
     public function testCheckIpIsInRangeOut()
     {
-        // Arrange
-        $a = $this->checkIpIsInRange('160.221.78.69', '160.221.79.1', '160.221.79.254');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsInRange('160.221.78.69', '160.221.79.1', '160.221.79.254');
         $this->assertEquals('out', $a);
     }
 
     public function testCheckIpIsPrivateEqualInvalid()
     {
-        // Arrange
-        $a = $this->checkIpIsPrivate('192.168');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsPrivate('192.168');
         $this->assertEquals('invalid IP', $a);
     }
 
     public function testCheckIpIsPrivateEqualPrivate()
     {
-        // Arrange
-        $a = $this->checkIpIsPrivate('127.0.0.1');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsPrivate('127.0.0.1');
         $this->assertEquals('private', $a);
     }
 
     public function testCheckIpIsPrivateEqualPublic()
     {
-        // Arrange
-        $a = $this->checkIpIsPrivate('216.58.211.4');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsPrivate('216.58.211.4');
         $this->assertEquals('public', $a);
     }
 
     public function testCheckIpIsV4OrV6EqualInvalid()
     {
-        // Arrange
-        $a = $this->checkIpIsV4OrV6('192.168');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsV4OrV6('192.168');
         $this->assertEquals('invalid IP', $a);
     }
 
     public function testCheckIpIsV4OrV6EqualV4()
     {
-        // Arrange
-        $a = $this->checkIpIsV4OrV6('192.168.1.1');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsV4OrV6('192.168.1.1');
         $this->assertEquals('V4', $a);
     }
 
     public function testCheckIpIsV4OrV6EqualV6()
     {
-        // Arrange
-        $a = $this->checkIpIsV4OrV6('::1');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->checkIpIsV4OrV6('::1');
         $this->assertEquals('V6', $a);
     }
 
     public function testConvertIpToNumber()
     {
-        // Arrange
-        $a = $this->convertIpToNumber('10.0.5.9');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->convertIpToNumber('10.0.5.9');
         $this->assertEquals(167773449, $a);
     }
 
     public function testConvertIpToNumberInvlidIP()
     {
-        // Arrange
-        $a = $this->convertIpToNumber('10.99');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->convertIpToNumber('10.99');
         $this->assertEquals('invalid IP', $a);
     }
 
     public function testConvertIpToNumberOfIpV6()
     {
-        // Arrange
-        $a = $this->convertIpToNumber('::FFFF:FFFF');
-        // Assert
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->convertIpToNumber('::FFFF:FFFF');
         $this->assertEquals(4294967295, $a);
     }
 
     public function testGetClientRealIpAddress()
     {
-        $a = $this->getClientRealIpAddress();
+        $mock = $this->getMockForTrait(NetworkComponentsByDanielGP::class);
+        $a = $mock->getClientRealIpAddress();
         $this->assertEquals('127.0.0.1', $a);
     }
 }
