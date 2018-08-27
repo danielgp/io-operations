@@ -56,7 +56,7 @@ trait BrowserAgentInfosByDanielGP
      * @param string $targetToAnalyze
      * @return array
      */
-    protected function getArchitectureFromUserAgent($userAgent, $targetToAnalyze = 'os')
+    public function getArchitectureFromUserAgent($userAgent, $targetToAnalyze = 'os')
     {
         switch ($targetToAnalyze) {
             case 'browser':
@@ -124,7 +124,7 @@ trait BrowserAgentInfosByDanielGP
      * @param array $returnType
      * @return array
      */
-    protected function getClientBrowserDetails($returnType = ['Browser', 'Device', 'OS'], $tmpFolder = null)
+    public function getClientBrowserDetails($returnType = ['Browser', 'Device', 'OS'], $tmpFolder = null)
     {
         $userAgent      = $this->getUserAgentByCommonLib();
         $devDetectClass = new \DeviceDetector\DeviceDetector($userAgent);
@@ -228,7 +228,7 @@ trait BrowserAgentInfosByDanielGP
      *
      * @return string
      */
-    protected function getUserAgentByCommonLib()
+    public function getUserAgentByCommonLib()
     {
         $this->autoPopulateSuperGlobals();
         if (!is_null($this->brServerGlobals->get('ua'))) {
