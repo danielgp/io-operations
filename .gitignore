@@ -1,5 +1,4 @@
 /nbproject/private/
 /vendor/
+/results/
 composer.lock
-/tests/php-code-sniffer/
-/tests/php-unit/results/
