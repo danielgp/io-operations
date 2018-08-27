@@ -25,83 +25,92 @@
  * SOFTWARE.
  *
  */
+
+namespace danielgp\browser_agent_info;
+
 class BrowserAgentInfosByDanielGPTest extends \PHPUnit\Framework\TestCase
 {
 
-    use \danielgp\browser_agent_info\BrowserAgentInfosByDanielGP;
+    public static function setUpBeforeClass()
+    {
+        require_once str_replace(implode(DIRECTORY_SEPARATOR, [
+                'tests',
+                'php-unit',
+            ]), 'source', __DIR__) . DIRECTORY_SEPARATOR . 'ArchitecturesCpu.php';
+        require_once str_replace(implode(DIRECTORY_SEPARATOR, [
+                'tests',
+                'php-unit',
+            ]), 'source', __DIR__) . DIRECTORY_SEPARATOR . 'BrowserAgentInfosByDanielGP.php';
+    }
 
     public function testArchitectureBrowserAMD64()
     {
         $ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:39.0) Gecko/20100101 Firefox/39.0';
-        // Arrange
-        $a  = $this->getArchitectureFromUserAgent($ua, 'browser');
-        // Assert
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a  = $mock->getArchitectureFromUserAgent($ua, 'browser');
         $this->assertContains('AMD/Intel x64', $a['name']);
     }
 
     public function testArchitectureOperatingSystemAMD64()
     {
         $ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:39.0) Gecko/20100101 Firefox/39.0';
-        // Arrange
-        $a  = $this->getArchitectureFromUserAgent($ua, 'os');
-        // Assert
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a  = $mock->getArchitectureFromUserAgent($ua, 'os');
         $this->assertContains('AMD/Intel x64', $a['name']);
     }
 
     public function testArchitectureOperatingSystemARM()
     {
         $ua = 'Mozilla/5.0 (Android; Mobile; rv:37.0) Gecko/37.0 Firefox/37.0';
-        // Arrange
-        $a  = $this->getArchitectureFromUserAgent($ua, 'os');
-        // Assert
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a  = $mock->getArchitectureFromUserAgent($ua, 'os');
         $this->assertContains('Advanced RISC Machine', $a['name']);
     }
 
     public function testArchitectureOperatingSystemIA32()
     {
-        $ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36 OPR/29.0.1795.47';
-        // Arrange
-        $a  = $this->getArchitectureFromUserAgent($ua, 'browser');
-        // Assert
+        $ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            . 'Chrome/42.0.2311.90 Safari/537.36 OPR/29.0.1795.47';
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a  = $mock->getArchitectureFromUserAgent($ua, 'browser');
         $this->assertContains('Intel x86', $a['name']);
     }
 
     public function testArchitectureOperatingSystemUnknown()
     {
-        $ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36 OPR/29.0.1795.47';
-        // Arrange
-        $a  = $this->getArchitectureFromUserAgent($ua, 'dummy');
-        // Assert
+        $ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            . 'Chrome/42.0.2311.90 Safari/537.36 OPR/29.0.1795.47';
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a  = $mock->getArchitectureFromUserAgent($ua, 'dummy');
         $this->assertContains('---', $a['name']);
     }
 
     public function testClientDetails()
     {
-        // Arrange
-        $a = $this->getClientBrowserDetails([
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a = $mock->getClientBrowserDetails([
             'Browser',
             'Device',
             'OS',
                 ], 'd:\\www\\other\\temp\\PHP\\PHP56\\');
-        // Assert
         $this->assertNotEmpty($a);
     }
 
     public function testClientDetailsNoCacheSpecified()
     {
-        // Arrange
-        $a = $this->getClientBrowserDetails([
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $a = $mock->getClientBrowserDetails([
             'Browser',
             'Device',
             'OS',
         ]);
-        // Assert
         $this->assertNotEmpty($a);
     }
 
-    public function UserAgent()
+    public function testUserAgent()
     {
-        $actual = $this->getUserAgentByCommonLib();
+        $mock = $this->getMockForTrait(BrowserAgentInfosByDanielGP::class);
+        $actual = $mock->getUserAgentByCommonLib();
         $this->assertEquals('Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:39.0) Gecko/20100101 Firefox/39.0', $actual);
     }
 }
