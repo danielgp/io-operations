@@ -15,9 +15,14 @@
         "phpoffice/phpspreadsheet": "*"
     },
     "autoload": {
-        "psr-4": {
-            "": "source/"
-        },
+        "classmap": [
+            "source/IOExcel.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=7.3"
+    },
+    "autoload-dev": {
         "classmap": [
             "source/IOExcel.php"
         ]
