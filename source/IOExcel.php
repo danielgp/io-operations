@@ -91,7 +91,9 @@ trait IOExcel
                 $aReturn = array_merge($aReturn, $bReturn);
             }
         }
-        return $aReturn;
+        if ($aReturn != []) {
+            throw new \PhpOffice\PhpSpreadsheet\Exception(implode(', ', $aReturn));
+        }
     }
 
     public function internalCheckingErrorMessages()
@@ -116,10 +118,7 @@ trait IOExcel
      */
     public function setArrayToExcel(array $inFeatures)
     {
-        $checkInputs = $this->checkInputFeatures($inFeatures);
-        if ($checkInputs != []) {
-            throw new \PhpOffice\PhpSpreadsheet\Exception(implode(', ', $checkInputs));
-        }
+        $this->checkInputFeatures($inFeatures);
         $this->objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         if (isset($inFeatures['Properties'])) {
             $this->setExcelProperties($inFeatures['Properties']);
@@ -331,23 +330,23 @@ trait IOExcel
     /**
      * Converts the time string given into native Excel format (number)
      *
-     * @param string $RSQLtime
+     * @param string $intRsqlTime
      * @return string
      */
-    private function setLocalTime2Seconds($RSQLtime)
+    private function setLocalTime2Seconds($intRsqlTime)
     {
         $sign = '';
-        if (is_null($RSQLtime) || ($RSQLtime == '')) {
-            $RSQLtime = '00:00:00';
-        } elseif (substr($RSQLtime, 0, 1) == '-') {
+        if (is_null($intRsqlTime) || ($intRsqlTime == '')) {
+            $intRsqlTime = '00:00:00';
+        } elseif (substr($intRsqlTime, 0, 1) == '-') {
             //extract negative sign and keep it separatly until ending
-            $RSQLtime = substr($RSQLtime, 1, strlen($RSQLtime) - 1);
-            $sign     = '-';
+            $intRsqlTime = substr($intRsqlTime, 1, strlen($intRsqlTime) - 1);
+            $sign        = '-';
         }
         $resultParts = [
-            'seconds' => substr($RSQLtime, -2),
-            'minutes' => substr($RSQLtime, -5, 2) * 60,
-            'hours'   => substr($RSQLtime, 0, strlen($RSQLtime) - 6) * 60 * 60,
+            'seconds' => substr($intRsqlTime, -2),
+            'minutes' => substr($intRsqlTime, -5, 2) * 60,
+            'hours'   => substr($intRsqlTime, 0, strlen($intRsqlTime) - 6) * 60 * 60,
         ];
         return $sign . implode('', array_values($resultParts));
     }
