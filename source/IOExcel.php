@@ -147,12 +147,12 @@ trait IOExcel
                     ]);
                     $rowIndex++;
                 }
+                $this->setExcelWorksheetPagination();
+                $this->setExcelWorksheetUsability([
+                    'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
+                    'HeaderRowIndex'      => $cntValue['StartingRowIndex'],
+                ]);
             }
-            $this->setExcelWorksheetPagination();
-            $this->setExcelWorksheetUsability([
-                'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
-                'HeaderRowIndex'      => $cntValue['StartingRowIndex'],
-            ]);
         }
         $this->objPHPExcel->setActiveSheetIndex(0);
         $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
