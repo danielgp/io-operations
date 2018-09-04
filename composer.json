@@ -11,20 +11,24 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
-        "phpoffice/phpexcel": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": ">=5.1"
+        "php": ">=7.1",
+        "phpoffice/phpspreadsheet": "*"
     },
     "autoload": {
+        "psr-4": {
+            "": "source/"
+        },
         "classmap": [
             "source/IOExcel.php"
         ]
     },
     "minimum-stability": "stable",
-    "prefer-stable":    true,
+    "prefer-stable": true,
     "archive": {
-        "exclude": ["/nbproject", "/vendor", "/tests"]
+        "exclude": [
+            "/nbproject",
+            "/results",
+            "/vendor"
+        ]
     }
 }

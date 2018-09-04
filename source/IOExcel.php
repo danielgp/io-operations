@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Daniel Popiniuc
+ * Copyright (c) 2015 - 2018 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,57 +39,69 @@ trait IOExcel
     /**
      * manages the inputs checks
      *
-     * @param array $inFeatures
+     * @param array $inFeatures Predefined array of attributes
      * @return null
-     * @throws \PHPExcel_Exception
      */
-    private function checkInputFeatures(array &$inFeatures)
+    private function checkInputFeatures(array $inFeatures)
     {
-        if (!is_array($inFeatures)) {
-            throw new \PHPExcel_Exception('Check 1: Missing parameters!');
+        $aReturn = [];
+        $check   = $this->internalCheckingErrorMessages();
+        if ($inFeatures === []) {
+            $aReturn[] = $check['1'];
         }
         if (!isset($inFeatures['Filename'])) {
-            throw new \PHPExcel_Exception('Check 2: No filename provided!');
+            $aReturn[] = $check['2'];
         } elseif (!is_string($inFeatures['Filename'])) {
-            throw new \PHPExcel_Exception('Check 2.1: Provided filename is not a string!');
+            $aReturn[] = $check['2.1'];
         }
         if (!isset($inFeatures['Worksheets'])) {
-            throw new \PHPExcel_Exception('Check 3: No worksheets provided!');
+            $aReturn[] = $check['3'];
         } elseif (!is_array($inFeatures['Worksheets'])) {
-            throw new \PHPExcel_Exception('Check 3.1: Provided worksheets is not an array!');
+            $aReturn[] = $check['3.1'];
         } else {
             foreach ($inFeatures['Worksheets'] as $key => $value) {
                 if (!isset($value['Name'])) {
-                    throw new \PHPExcel_Exception('Check 4: No Name was provided for the worksheet #' . $key . ' !');
+                    $aReturn[] = $check['4'];
                 } elseif (!is_string($value['Name'])) {
-                    throw new \PHPExcel_Exception('Check 4.1: The Name provided for the worksheet #'
-                    . $key . ' is not a string!');
+                    $aReturn[] = $check['4.1'];
                 }
                 if (!isset($value['Content'])) {
-                    throw new \PHPExcel_Exception('Check 5: No Content was provided for the worksheet #'
-                    . $key . ' !');
+                    $aReturn[] = $check['5'];
                 } elseif (!is_array($value['Content'])) {
-                    throw new \PHPExcel_Exception('Check 4.1: The Content provided for the worksheet #'
-                    . $key . ' is not an array!');
+                    $aReturn[] = $check['5.1'];
                 }
             }
         }
-        return null;
+        return $aReturn;
+    }
+
+    public function internalCheckingErrorMessages()
+    {
+        return [
+            '1'   => 'Check 1: Missing parameters!',
+            '2'   => 'Check 2: No filename provided!',
+            '2.1' => 'Check 2.1: Provided filename is not a string!',
+            '3'   => 'Check 3: No worksheets provided!',
+            '3.1' => 'Check 3.1: Provided worksheets is not an array!',
+            '4'   => 'Check 4: No Name was provided for the worksheet #%s !',
+            '4.1' => 'Check 4.1: The Name provided for the worksheet #%s is not a string!',
+            '5'   => 'Check 5: No Content was provided for the worksheet #%s !',
+            '5.1' => 'Check 5.1: The Content provided for the worksheet #%s is not an array!',
+        ];
     }
 
     /**
      * Generate an Excel file from a given array
      *
-     * @param array $inFeatures
+     * @param array $inFeatures Predefined array of attributes
      */
-    protected function setArrayToExcel(array $inFeatures)
+    public function setArrayToExcel(array $inFeatures)
     {
         $checkInputs = $this->checkInputFeatures($inFeatures);
-        if (!is_null($checkInputs)) {
-            echo '<hr/>' . $checkInputs . '<hr/>';
-            return '';
+        if ($checkInputs != []) {
+            throw new \PhpOffice\PhpSpreadsheet\Exception(implode(', ', array_values($checkInputs)));
         }
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         if (isset($inFeatures['Properties'])) {
             $this->setExcelProperties($objPHPExcel, $inFeatures['Properties']);
         }
@@ -127,13 +139,9 @@ trait IOExcel
         $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
         if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
             // output the created content to the browser and skip-it otherwise
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Pragma: private');
-            header('Cache-control: private, must-revalidate');
-            header('Content-Disposition: attachment;filename="' . $inFeatures['Filename'] . '"');
-            header('Cache-Control: max-age=0');
+            $this->setForcedHeadersWhenNotCli($inFeatures['Filename']);
         }
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($objPHPExcel);
         if (in_array(PHP_SAPI, ['cli', 'cli-server'])) {
             $objWriter->save($inFeatures['Filename']);
         } else {
@@ -143,144 +151,109 @@ trait IOExcel
     }
 
     /**
-     * Using a lookup cache adds a slight memory overhead,
-     * but boosts speed caching using a static within the method is faster than a class static,
-     * though it's additional memory overhead
+     * Outputs the header cells
      *
-     * @staticvar array $_indexCache
-     * @param type $pColIndex
-     * @return string
-     */
-    private static function setArrayToExcelStringFromColumnIndex($pColIndex = 0)
-    {
-        static $_indexCache = [];
-        if (!isset($_indexCache[$pColIndex])) {
-            // Determine column string
-            if ($pColIndex < 26) {
-                // 26 is the last # of column of 1 single letter
-                $_indexCache[$pColIndex] = chr(64 + $pColIndex);
-            } elseif ($pColIndex < 702) {
-                // 702 is the last # of columns with 2 letters
-                $_indexCache[$pColIndex] = chr(64 + ($pColIndex / 26)) . chr(64 + $pColIndex % 26);
-            } else {
-                // anything above 702 as # of column has 3 letters combination
-                $_indexCache[$pColIndex] = chr(64 + (($pColIndex - 26) / 676))
-                        . chr(64 + ((($pColIndex - 26) % 676) / 26))
-                        . chr(64 + $pColIndex % 26);
-            }
-        }
-        return $_indexCache[$pColIndex];
-    }
-
-    /**
-     * Ouputs the header cells
-     *
-     * @param \PHPExcel $objPHPExcel
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel
      * @param array $inputs
      */
-    private function setExcelHeaderCellContent(\PHPExcel $objPHPExcel, array $inputs)
+    private function setExcelHeaderCellContent(\PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel, array $inputs)
     {
         $columnCounter = $inputs['StartingColumnIndex'];
         foreach ($inputs['RowValues'] as $value2) {
-            $crtCol = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $crtCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
+            if ($columnCounter > 702) {
+                echo $columnCounter . ' => ' . $crtCol . PHP_EOL;
+            }
             $objPHPExcel
-                    ->getActiveSheet()
-                    ->getColumnDimension($crtCol)
-                    ->setAutoSize(true);
+                ->getActiveSheet()
+                ->getColumnDimension($crtCol)
+                ->setAutoSize(true);
             $objPHPExcel
-                    ->getActiveSheet()
-                    ->SetCellValue($crtCol . $inputs['StartingRowIndex'], $value2);
+                ->getActiveSheet()
+                ->setCellValue($crtCol . $inputs['StartingRowIndex'], $value2);
             $objPHPExcel
-                    ->getActiveSheet()
-                    ->getStyle($crtCol . $inputs['StartingRowIndex'])
-                    ->getFill()
-                    ->applyFromArray([
-                        'type'       => 'solid',
-                        'startcolor' => ['rgb' => 'CCCCCC'],
-                        'endcolor'   => ['rgb' => 'CCCCCC'],
+                ->getActiveSheet()
+                ->getStyle($crtCol . $inputs['StartingRowIndex'])
+                ->getFill()
+                ->applyFromArray([
+                    'type'       => 'solid',
+                    'startcolor' => ['rgb' => 'CCCCCC'],
+                    'endcolor'   => ['rgb' => 'CCCCCC'],
             ]);
             $objPHPExcel
-                    ->getActiveSheet()
-                    ->getStyle($crtCol . $inputs['StartingRowIndex'])
-                    ->applyFromArray([
-                        'font' => [
-                            'bold'  => true,
-                            'color' => ['rgb' => '000000'],
-                        ]
-            ]);
+                ->getActiveSheet()
+                ->getStyle($crtCol . $inputs['StartingRowIndex'])
+                ->applyFromArray([
+                    'font' => [
+                        'bold'  => true,
+                        'color' => ['rgb' => '000000'],
+                    ]
+                    ]
+            );
             $columnCounter++;
         }
         $objPHPExcel
-                ->getActiveSheet()
-                ->calculateColumnWidths();
+            ->getActiveSheet()
+            ->calculateColumnWidths();
     }
 
     /**
      * sets the Properties for the Excel file
      *
-     * @param \PHPExcel $objPHPExcel
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel
      * @param array $inProperties
      */
-    private function setExcelProperties(\PHPExcel $objPHPExcel, array $inProperties)
+    private function setExcelProperties(\PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel, array $inProperties)
     {
-        if (isset($inProperties['Creator'])) {
-            $objPHPExcel
-                    ->getProperties()
-                    ->setCreator($inProperties['Creator']);
+        if (array_key_exists('Creator', $inProperties)) {
+            $objPHPExcel->getProperties()->setCreator($inProperties['Creator']);
         }
-        if (isset($inProperties['LastModifiedBy'])) {
-            $objPHPExcel
-                    ->getProperties()
-                    ->setLastModifiedBy($inProperties['LastModifiedBy']);
+        if (array_key_exists('LastModifiedBy', $inProperties)) {
+            $objPHPExcel->getProperties()->setLastModifiedBy($inProperties['LastModifiedBy']);
         }
-        if (isset($inProperties['description'])) {
-            $objPHPExcel
-                    ->getProperties()
-                    ->setDescription($inProperties['description']);
+        if (array_key_exists('description', $inProperties)) {
+            $objPHPExcel->getProperties()->setDescription($inProperties['description']);
         }
-        if (isset($inProperties['subject'])) {
-            $objPHPExcel
-                    ->getProperties()
-                    ->setSubject($inProperties['subject']);
+        if (array_key_exists('subject', $inProperties)) {
+            $objPHPExcel->getProperties()->setSubject($inProperties['subject']);
         }
-        if (isset($inProperties['title'])) {
-            $objPHPExcel
-                    ->getProperties()
-                    ->setTitle($inProperties['title']);
+        if (array_key_exists('title', $inProperties)) {
+            $objPHPExcel->getProperties()->setTitle($inProperties['title']);
         }
     }
 
     /**
      * Outputs the content cells
      *
-     * @param \PHPExcel $objPHPExcel
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel
      * @param array $inputs
      */
-    private function setExcelRowCellContent(\PHPExcel $objPHPExcel, array $inputs)
+    private function setExcelRowCellContent(\PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel, array $inputs)
     {
         $columnCounter = $inputs['StartingColumnIndex'];
         foreach ($inputs['RowValues'] as $value2) {
-            $crCol          = $this->setArrayToExcelStringFromColumnIndex($columnCounter);
+            $crCol          = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
             $objPHPExcel
-                    ->getActiveSheet()
-                    ->getColumnDimension($crCol)
-                    ->setAutoSize(false);
+                ->getActiveSheet()
+                ->getColumnDimension($crCol)
+                ->setAutoSize(false);
             $crtCellAddress = $crCol . $inputs['CurrentRowIndex'];
+            $cntLen         = strlen($value2);
             if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
                 $value2 = '';
-            } elseif (((strlen($value2) == 8) || (strlen($value2) == 7)) && (strpos($value2, ':') !== false)) {
+            } elseif (in_array($cntLen, [7, 8, 9]) && (($cntLen - strlen(str_replace(':', '', $value2))) == 2)) {
                 $objPHPExcel
-                        ->getActiveSheet()
-                        ->SetCellValue($crtCellAddress, ($this->setLocalTime2Seconds($value2) / 60 / 60 / 24));
+                    ->getActiveSheet()
+                    ->SetCellValue($crtCellAddress, ($this->setLocalTime2Seconds($value2) / 60 / 60 / 24));
                 $objPHPExcel
-                        ->getActiveSheet()
-                        ->getStyle($crtCellAddress)
-                        ->getNumberFormat()
-                        ->setFormatCode('[H]:mm:ss;@');
+                    ->getActiveSheet()
+                    ->getStyle($crtCellAddress)
+                    ->getNumberFormat()
+                    ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DATETIME);
             } else {
                 $objPHPExcel
-                        ->getActiveSheet()
-                        ->SetCellValue($crtCellAddress, strip_tags($value2));
+                    ->getActiveSheet()
+                    ->SetCellValue($crtCellAddress, strip_tags($value2));
             }
             $columnCounter += 1;
         }
@@ -289,9 +262,9 @@ trait IOExcel
     /**
      * sets the Pagination
      *
-     * @param \PHPExcel $objPHPExcel
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel
      */
-    private function setExcelWorksheetPagination(\PHPExcel $objPHPExcel)
+    private function setExcelWorksheetPagination(\PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel)
     {
         $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
         $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9); //coresponding to A4
@@ -309,31 +282,40 @@ trait IOExcel
     /**
      * Sets a few usability features
      *
-     * @param \PHPExcel $objPHPExcel
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel
      * @param type $inputs
      */
-    private function setExcelWorksheetUsability(\PHPExcel $objPHPExcel, $inputs)
+    private function setExcelWorksheetUsability(\PhpOffice\PhpSpreadsheet\Spreadsheet $objPHPExcel, $inputs)
     {
         // repeat coloumn headings for every new page...
         $objPHPExcel
-                ->getActiveSheet()
-                ->getPageSetup()
-                ->setRowsToRepeatAtTopByStartAndEnd(1, $inputs['HeaderRowIndex']);
+            ->getActiveSheet()
+            ->getPageSetup()
+            ->setRowsToRepeatAtTopByStartAndEnd(1, $inputs['HeaderRowIndex']);
         // activate AutoFilter
         $autoFilterArea = implode('', [
-            $this->setArrayToExcelStringFromColumnIndex($inputs['StartingColumnIndex']),
+            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($inputs['StartingColumnIndex']),
             $inputs['HeaderRowIndex'],
             ':',
             $objPHPExcel->getActiveSheet()->getHighestDataColumn(),
             $objPHPExcel->getActiveSheet()->getHighestDataRow(),
         ]);
         $objPHPExcel
-                ->getActiveSheet()
-                ->setAutoFilter($autoFilterArea);
+            ->getActiveSheet()
+            ->setAutoFilter($autoFilterArea);
         // freeze 1st top row
         $objPHPExcel
-                ->getActiveSheet()
-                ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
+            ->getActiveSheet()
+            ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
+    }
+
+    private function setForcedHeadersWhenNotCli($strFileName)
+    {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Pragma: private');
+        header('Cache-control: private, must-revalidate');
+        header('Content-Disposition: attachment;filename="' . $strFileName . '"');
+        header('Cache-Control: max-age=0');
     }
 
     /**
