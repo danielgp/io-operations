@@ -34,9 +34,9 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
     public static function setUpBeforeClass()
     {
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
-                . DIRECTORY_SEPARATOR . 'autoload.php';
+            . DIRECTORY_SEPARATOR . 'autoload.php';
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'source', __DIR__)
-                . DIRECTORY_SEPARATOR . 'IOExcel.php';
+            . DIRECTORY_SEPARATOR . 'IOExcel.php';
     }
 
     /**
@@ -164,9 +164,11 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
 
     public function testSetArrayToExcel()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock                = $this->getMockForTrait(IOExcel::class);
+        $strFileNameWithPath = str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'results', __DIR__)
+            . 'test.xlsx';
         $mock->setArrayToExcel([
-            'Filename'   => 'C:/Windows/Temp/test.xlsx',
+            'Filename'   => $strFileNameWithPath,
             'Worksheets' => [
                 [
                     'Name'    => 'Worksheet1',
@@ -226,6 +228,6 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
                 'title'          => 'PHPunit test Title',
             ],
         ]);
-        $this->assertFileExists('C:/Windows/Temp/test.xlsx');
+        $this->assertFileExists($strFileNameWithPath);
     }
 }
