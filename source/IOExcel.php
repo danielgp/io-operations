@@ -39,10 +39,34 @@ trait IOExcel
     private $objPHPExcel;
 
     /**
+     * manages further inputs checks
+     *
+     * @param array $inFeatures Predefined array of attributes
+     * @return arrray
+     */
+    private function checkInputFeatureContent($inFeaturesWorksheets)
+    {
+        $aReturn = [];
+        foreach ($inFeaturesWorksheets as $key => $value) {
+            if (!array_key_exists('Name', $value)) {
+                $aReturn[] = sprintf($check['4'], $key);
+            } elseif (!is_string($value['Name'])) {
+                $aReturn[] = sprintf($check['4.1'], $key);
+            }
+            if (!array_key_exists('Content', $value)) {
+                $aReturn[] = sprintf($check['5'], $key);
+            } elseif (!is_array($value['Content'])) {
+                $aReturn[] = sprintf($check['5.1'], $key);
+            }
+        }
+        return $aReturn;
+    }
+
+    /**
      * manages the inputs checks
      *
      * @param array $inFeatures Predefined array of attributes
-     * @return null
+     * @return arrray
      */
     private function checkInputFeatures(array $inFeatures)
     {
@@ -51,27 +75,19 @@ trait IOExcel
         if ($inFeatures === []) {
             $aReturn[] = $check['1'];
         }
-        if (!isset($inFeatures['Filename'])) {
+        if (!array_key_exists('Filename', $inFeatures)) {
             $aReturn[] = $check['2'];
         } elseif (!is_string($inFeatures['Filename'])) {
             $aReturn[] = $check['2.1'];
         }
-        if (!isset($inFeatures['Worksheets'])) {
+        if (!array_key_exists('Worksheets', $inFeatures)) {
             $aReturn[] = $check['3'];
         } elseif (!is_array($inFeatures['Worksheets'])) {
             $aReturn[] = $check['3.1'];
-        } elseif (isset($inFeatures['Worksheets'])) {
-            foreach ($inFeatures['Worksheets'] as $key => $value) {
-                if (!isset($value['Name'])) {
-                    $aReturn[] = $check['4'];
-                } elseif (!is_string($value['Name'])) {
-                    $aReturn[] = $check['4.1'];
-                }
-                if (!isset($value['Content'])) {
-                    $aReturn[] = $check['5'];
-                } elseif (!is_array($value['Content'])) {
-                    $aReturn[] = $check['5.1'];
-                }
+        } elseif (array_key_exists('Worksheets', $inFeatures)) {
+            $bReturn = $this->checkInputFeatureContent($inFeatures['Worksheets']);
+            if ($bReturn !== []) {
+                $aReturn = array_merge($aReturn, $bReturn);
             }
         }
         return $aReturn;
@@ -115,8 +131,8 @@ trait IOExcel
             $this->objPHPExcel->getActiveSheet()->setTitle($wkValue['Name']);
             foreach ($wkValue['Content'] as $cntValue) {
                 $rowIndex = $cntValue['StartingRowIndex'];
-                foreach ($cntValue['ContentArray'] as $key => $value) {
-                    if ($key == 0) {
+                foreach ($cntValue['ContentArray'] as $key2 => $value) {
+                    if ($key2 == 0) {
                         $this->setExcelHeaderCellContent([
                             'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
                             'StartingRowIndex'    => $rowIndex,
@@ -139,8 +155,7 @@ trait IOExcel
         }
         $this->objPHPExcel->setActiveSheetIndex(0);
         $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
-        if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) {
-            // output the created content to the browser and skip-it otherwise
+        if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) { // output created content to browser OR skip-it otherwise
             $this->setForcedHeadersWhenNotCli($inFeatures['Filename']);
         }
         $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($this->objPHPExcel);
@@ -162,9 +177,6 @@ trait IOExcel
         $columnCounter = $inputs['StartingColumnIndex'];
         foreach ($inputs['RowValues'] as $value2) {
             $crtCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
-            if ($columnCounter > 702) {
-                echo $columnCounter . ' => ' . $crtCol . PHP_EOL;
-            }
             $this->objPHPExcel
                 ->getActiveSheet()
                 ->getColumnDimension($crtCol)
@@ -280,7 +292,7 @@ trait IOExcel
     /**
      * Sets a few usability features
      *
-     * @param type $inputs
+     * @param array $inputs
      */
     private function setExcelWorksheetUsability($inputs)
     {
