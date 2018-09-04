@@ -35,7 +35,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
     {
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
             . DIRECTORY_SEPARATOR . 'autoload.php';
-        require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'source', __DIR__)
+        require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
             . DIRECTORY_SEPARATOR . 'IOExcel.php';
     }
 
@@ -93,15 +93,17 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
-                'Content' => [
-                    [
-                        'StartingColumnIndex' => 1,
-                        'StartingRowIndex'    => 1,
-                        'ContentArray'        => [
-                            [
-                                'First Column' => 10,
+                [
+                    'Content' => [
+                        [
+                            'StartingColumnIndex' => 1,
+                            'StartingRowIndex'    => 1,
+                            'ContentArray'        => [
+                                [
+                                    'First Column' => 10,
+                                ],
                             ],
-                        ],
+                        ]
                     ]
                 ]
             ],
@@ -117,16 +119,18 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
-                'Name'    => 123,
-                'Content' => [
-                    [
-                        'StartingColumnIndex' => 1,
-                        'StartingRowIndex'    => 1,
-                        'ContentArray'        => [
-                            [
-                                'First Column' => 10,
+                [
+                    'Name'    => 123,
+                    'Content' => [
+                        [
+                            'StartingColumnIndex' => 1,
+                            'StartingRowIndex'    => 1,
+                            'ContentArray'        => [
+                                [
+                                    'First Column' => 10,
+                                ],
                             ],
-                        ],
+                        ]
                     ]
                 ]
             ],
@@ -142,7 +146,9 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
-                'Name' => 'Workshet1',
+                [
+                    'Name' => 'Workshet1',
+                ]
             ],
         ]);
     }
@@ -156,8 +162,10 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
-                'Name'    => 'Workshet1',
-                'Content' => 'string',
+                [
+                    'Name'    => 'Workshet1',
+                    'Content' => 'string',
+                ]
             ],
         ]);
     }
@@ -165,8 +173,8 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
     public function testSetArrayToExcel()
     {
         $mock                = $this->getMockForTrait(IOExcel::class);
-        $strFileNameWithPath = str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'results', __DIR__)
-            . 'test.xlsx';
+        $strFileNameWithPath = str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', '', __DIR__)
+            . DIRECTORY_SEPARATOR . 'test_results.xlsx';
         $mock->setArrayToExcel([
             'Filename'   => $strFileNameWithPath,
             'Worksheets' => [
