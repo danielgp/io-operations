@@ -41,10 +41,11 @@ trait IOExcel
     /**
      * manages further inputs checks
      *
-     * @param array $inFeatures Predefined array of attributes
-     * @return arrray
+     * @param array $inFeaturesWorksheets Predefined array of attributes
+     * @param array $check Checking messages
+     * @return array|string[]
      */
-    private function checkInputFeatureContent($inFeaturesWorksheets)
+    private function checkInputFeatureContent($inFeaturesWorksheets, $check)
     {
         $aReturn = [];
         foreach ($inFeaturesWorksheets as $key => $value) {
@@ -66,7 +67,7 @@ trait IOExcel
      * manages the inputs checks
      *
      * @param array $inFeatures Predefined array of attributes
-     * @return arrray
+     * @return array|string[]
      */
     private function checkInputFeatures(array $inFeatures)
     {
@@ -85,7 +86,7 @@ trait IOExcel
         } elseif (!is_array($inFeatures['Worksheets'])) {
             $aReturn[] = $check['3.1'];
         } elseif (array_key_exists('Worksheets', $inFeatures)) {
-            $bReturn = $this->checkInputFeatureContent($inFeatures['Worksheets']);
+            $bReturn = $this->checkInputFeatureContent($inFeatures['Worksheets'], $check);
             if ($bReturn !== []) {
                 $aReturn = array_merge($aReturn, $bReturn);
             }
@@ -117,7 +118,7 @@ trait IOExcel
     {
         $checkInputs = $this->checkInputFeatures($inFeatures);
         if ($checkInputs != []) {
-            throw new \PhpOffice\PhpSpreadsheet\Exception(implode(', ', array_values($checkInputs)));
+            throw new \PhpOffice\PhpSpreadsheet\Exception(implode(', ', $checkInputs));
         }
         $this->objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         if (isset($inFeatures['Properties'])) {
