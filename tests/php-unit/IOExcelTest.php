@@ -35,7 +35,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
     {
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
             . DIRECTORY_SEPARATOR . 'autoload.php';
-        require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
+        require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'source', __DIR__)
             . DIRECTORY_SEPARATOR . 'IOExcel.php';
     }
 
