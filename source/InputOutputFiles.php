@@ -45,6 +45,26 @@ trait InputOutputFiles
         fclose($fJson);
         return $fileContent;
     }
+    
+    /**
+     * returns an array with non-standard holidays from a JSON file
+     *
+     * @param string $fileBaseName
+     * @return mixed
+     */
+    public function getArrayFromJsonFile($fileBaseName)
+    {
+        $jSonContent   = $this->getFileJsonContent($fileBaseName);
+        $arrayToReturn = json_decode($jSonContent, true);
+        $jsonError     = json_last_error();
+        if ($jsonError == JSON_ERROR_NONE) {
+            return $arrayToReturn;
+        } else {
+            $feedback = sprintf('Unable to open %s file!', $fileBaseName) . '...';
+            echo $feedback;
+            throw new \RuntimeException($feedback);
+        }
+    }
 
     public function openFileSafelyAndReturnHandle($strFileName, $strFileOperationChar, $strFileOperationName)
     {
