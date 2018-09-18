@@ -26,33 +26,33 @@
  
 namespace danielgp\io_operations;
 
-trait InputOutputOperations
+trait InputOutputFiles
 {
 
-    public function checkClientCalling()
+    public function checkFileExistance($strFilePath, $strFileBaseName)
     {
-        if (PHP_SAPI !== 'cli') {
-            throw new \RuntimeException('By design this script will only work from PHP command line '
-                . 'and this ain`t it...');
+        $fName = $strFilePath . DIRECTORY_SEPARATOR . $strFileBaseName . '.json';
+        if (!file_exists($fName)) {
+            throw new \RuntimeException(sprintf('File %s does not exists!', $fName));
         }
     }
 
-    public function checkInputParameters($arrayParameters)
+    public function getFileJsonContent($fileBaseName)
     {
-        $aAllParameters = getopt('--', array_keys($arrayParameters));
-        foreach ($arrayParameters as $strParameterLabel => $strParameterName) {
-            $this->checkInputSingleParameter($arrayParameters, $strParameterLabel, $strParameterName);
-        }
-        return $aAllParameters;
+        $fName       = $this->checkFileExistance($fileBaseName);
+        $fJson       = $this->openFileSafelyAndReturnHandle($fName, 'r', 'read');
+        $fileContent = fread($fJson, ((int) filesize($fName)));
+        fclose($fJson);
+        return $fileContent;
     }
 
-    private function checkInputSingleParameter($arrayParameters, $strParameterLabel, $strParameterName)
+    public function openFileSafelyAndReturnHandle($strFileName, $strFileOperationChar, $strFileOperationName)
     {
-        if (!array_key_exists($strParameterLabel, $arrayParameters)) {
-            $feedbackMessage = sprintf('Mandatory input parameter "%s" for %s has not been seen, '
-                . 'will quit then!', $strParameterLabel, $strParameterName);
-            echo PHP_EOL . $feedbackMessage;
-            throw new \RuntimeException($feedbackMessage);
+        $fHandle = fopen($strFileName, $strFileOperationChar);
+        if ($fHandle === false) {
+            throw new \RuntimeException(''
+                . sprintf('Unable to open file %s for %s purposes!', $strFileName, $strFileOperationName));
         }
+        return $fHandle;
     }
 }

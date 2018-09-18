@@ -16,7 +16,9 @@
     },
     "autoload": {
         "classmap": [
-            "source/InputOutputOperations.php"
+            "source/InputOutputOperations.php",
+            "source/InputOutputFiles.php",
+            "source/InputOutputStrings.php"
         ]
     },
     "minimum-stability": "stable",

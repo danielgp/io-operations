@@ -26,33 +26,21 @@
  
 namespace danielgp\io_operations;
 
-trait InputOutputOperations
+trait InputOutputStrings
 {
 
-    public function checkClientCalling()
+    protected function cleanString($strInput)
     {
-        if (PHP_SAPI !== 'cli') {
-            throw new \RuntimeException('By design this script will only work from PHP command line '
-                . 'and this ain`t it...');
-        }
+        return str_replace([' ', "\n", "\r"], '', $strInput);
     }
 
-    public function checkInputParameters($arrayParameters)
+    protected function setSeparator($strCharacter)
     {
-        $aAllParameters = getopt('--', array_keys($arrayParameters));
-        foreach ($arrayParameters as $strParameterLabel => $strParameterName) {
-            $this->checkInputSingleParameter($arrayParameters, $strParameterLabel, $strParameterName);
-        }
-        return $aAllParameters;
+        return str_repeat($strCharacter, 90);
     }
 
-    private function checkInputSingleParameter($arrayParameters, $strParameterLabel, $strParameterName)
+    protected function setTab($intMultiplier = 1)
     {
-        if (!array_key_exists($strParameterLabel, $arrayParameters)) {
-            $feedbackMessage = sprintf('Mandatory input parameter "%s" for %s has not been seen, '
-                . 'will quit then!', $strParameterLabel, $strParameterName);
-            echo PHP_EOL . $feedbackMessage;
-            throw new \RuntimeException($feedbackMessage);
-        }
+        return str_repeat(' ', (4 * $intMultiplier));
     }
 }
