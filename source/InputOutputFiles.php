@@ -29,17 +29,18 @@ namespace danielgp\io_operations;
 trait InputOutputFiles
 {
 
-    public function checkFileExistance($strFilePath, $strFileBaseName)
+    public function checkFileExistance($strFilePath, $strFileName)
     {
-        $fName = $strFilePath . DIRECTORY_SEPARATOR . $strFileBaseName . '.json';
+        $fName = $this->gluePathWithFileName($strFilePath, $strFileName);
         if (!file_exists($fName)) {
             throw new \RuntimeException(sprintf('File %s does not exists!', $fName));
         }
+        return $fName;
     }
 
-    public function getFileJsonContent($fileBaseName)
+    public function getFileJsonContent($strFilePath, $strFileName)
     {
-        $fName       = $this->checkFileExistance($fileBaseName);
+        $fName       = $this->checkFileExistance($strFilePath, $strFileName);
         $fJson       = $this->openFileSafelyAndReturnHandle($fName, 'r', 'read');
         $fileContent = fread($fJson, ((int) filesize($fName)));
         fclose($fJson);
@@ -49,21 +50,27 @@ trait InputOutputFiles
     /**
      * returns an array with non-standard holidays from a JSON file
      *
-     * @param string $fileBaseName
+     * @param string $strFileName
      * @return mixed
      */
-    public function getArrayFromJsonFile($fileBaseName)
+    public function getArrayFromJsonFile($strFilePath, $strFileName)
     {
-        $jSonContent   = $this->getFileJsonContent($fileBaseName);
+        $jSonContent   = $this->getFileJsonContent($strFilePath, $strFileName);
         $arrayToReturn = json_decode($jSonContent, true);
         $jsonError     = json_last_error();
         if ($jsonError == JSON_ERROR_NONE) {
             return $arrayToReturn;
         } else {
-            $feedback = sprintf('Unable to open %s file!', $fileBaseName) . '...';
+            $fName = $this->gluePathWithFileName($strFilePath, $strFileName);
+            $feedback = sprintf('Unable to open %s file!', $fName) . '...';
             echo $feedback;
             throw new \RuntimeException($feedback);
         }
+    }
+    
+    public function gluePathWithFileName($strFilePath, $strFileName)
+    {
+        return $strFilePath . DIRECTORY_SEPARATOR . $strFileName;
     }
 
     public function openFileSafelyAndReturnHandle($strFileName, $strFileOperationChar, $strFileOperationName)
