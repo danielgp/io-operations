@@ -15,6 +15,9 @@
         "ext-json": "*"
     },
     "autoload": {
+        "psr-4": {
+            "danielgp\\io_operations": "vendor/danielgp/io-operations"
+        },
         "classmap": [
             "source/InputOutputMemory.php",
             "source/InputOutputTiming.php",
