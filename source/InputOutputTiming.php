@@ -31,6 +31,29 @@ trait InputOutputTiming
     use InputOutputMemory;
     
     public $intTimeCounter = 0;
+    
+    /**
+     * Converts a
+     *
+     * @param string $inStrictIso8601DtTm
+     * @return string
+     */
+    public function convertDateTimeToUtcTimeZone($inStrictIso8601DtTm)
+    {
+        $tmpDateTimeIn = $this->convertTimeFromFormatSafely($inStrictIso8601DtTm);
+        $tmpDateTimeIn->setTimezone(new \DateTimeZone('UTC'));
+        return $tmpDateTimeIn->format('Y-m-d H:i:s');
+    }
+
+    public function convertTimeFromFormatSafely($inStrictIso8601DtTm)
+    {
+        $tmpDateTimeIn = \DateTime::createFromFormat(\DATE_ATOM, $inStrictIso8601DtTm);
+        if ($tmpDateTimeIn === false) {
+            throw new \RuntimeException(''
+                . sprintf('Unable to create DateTime object from %s string!', $inStrictIso8601DtTm));
+        }
+        return $tmpDateTimeIn;
+    }
 
     public function convertTimeToMilliseconds($time)
     {
