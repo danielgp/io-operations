@@ -8,4 +8,3 @@ This repository is intended to ease Input Output operations from other PHP libra
 ## Who do I talk to? ##
 
 Repository owner is: [Daniel Popiniuc](mailto:danielpopiniuc@gmail.com)
-
