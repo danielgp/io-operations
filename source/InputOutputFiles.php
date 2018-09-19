@@ -37,6 +37,15 @@ trait InputOutputFiles
         }
         return $fName;
     }
+    
+    public function getFileEntireContent($strInputFile)
+    {
+        $contentInputFile = file($strInputFile, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+        if ($contentInputFile === false) {
+            throw new \RuntimeException(sprintf('Unable to read file %s...', $strInputFile));
+        }
+        return $contentInputFile;
+    }
 
     public function getFileJsonContent($strFilePath, $strFileName)
     {
@@ -62,9 +71,7 @@ trait InputOutputFiles
             return $arrayToReturn;
         } else {
             $fName = $this->gluePathWithFileName($strFilePath, $strFileName);
-            $feedback = sprintf('Unable to open %s file!', $fName) . '...';
-            echo $feedback;
-            throw new \RuntimeException($feedback);
+            throw new \RuntimeException(sprintf('Unable to open %s file...', $fName));
         }
     }
     
@@ -77,8 +84,8 @@ trait InputOutputFiles
     {
         $fHandle = fopen($strFileName, $strFileOperationChar);
         if ($fHandle === false) {
-            throw new \RuntimeException(''
-                . sprintf('Unable to open file %s for %s purposes!', $strFileName, $strFileOperationName));
+            throw new \RuntimeException(sprintf('Unable to open file %s for %s purposes!'
+            . '', $strFileName, $strFileOperationName));
         }
         return $fHandle;
     }
