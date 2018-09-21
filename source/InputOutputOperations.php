@@ -41,7 +41,10 @@ trait InputOutputOperations
     {
         $aAllParameters = getopt('--', array_keys($arrayParameters));
         foreach ($arrayParameters as $strParameterLabel => $strParameterName) {
-            $this->checkInputSingleParameter($arrayParameters, $strParameterLabel, $strParameterName);
+            if (substr($strParameterLabel, -2) !== '::') {
+                $this->checkInputSingleParameter($aAllParameters, str_replace(':', '', $strParameterLabel)
+                    . '', $strParameterName);
+            }
         }
         return $aAllParameters;
     }
