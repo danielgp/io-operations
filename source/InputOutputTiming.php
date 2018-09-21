@@ -23,15 +23,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 namespace danielgp\io_operations;
 
 trait InputOutputTiming
 {
+
     use InputOutputMemory;
-    
+
     public $intTimeCounter = 0;
-    
+
     /**
      * Converts a
      *
@@ -69,7 +70,7 @@ trait InputOutputTiming
     public function getTimestampArray($crtTime)
     {
         return [
-            'float'  => $this->getTimestampFloat($crtTime), 
+            'float'  => $this->getTimestampFloat($crtTime),
             'string' => $this->getTimestampString($crtTime)
         ];
     }
@@ -78,13 +79,13 @@ trait InputOutputTiming
     {
         return ($crtTime['sec'] + $crtTime['usec'] / pow(10, 6));
     }
-    
+
     private function getTimestampString($dateTime)
     {
-        return '<span style="color:black!important;font-weight:bold;">[' 
+        return '<span style="color:black!important;font-weight:bold;">['
             . $dateTime->format('Y-m-d H:i:s.u') . ']</span>';
     }
-    
+
     public function getTimestampedInfo()
     {
         $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
