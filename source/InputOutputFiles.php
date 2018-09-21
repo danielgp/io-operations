@@ -71,7 +71,7 @@ trait InputOutputFiles
             return $arrayToReturn;
         } else {
             $fName = $this->gluePathWithFileName($strFilePath, $strFileName);
-            throw new \RuntimeException(sprintf('Unable to open %s file...', $fName));
+            throw new \RuntimeException(sprintf('Unable to interpret JSON from %s file...', $fName));
         }
     }
     
