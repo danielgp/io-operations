@@ -16,11 +16,12 @@
     },
     "autoload": {
         "classmap": [
-            "source/InputOutputMemory.php",
-            "source/InputOutputTiming.php",
-            "source/InputOutputOperations.php",
+            "source/InputOutputArrays.php",
             "source/InputOutputFiles.php",
-            "source/InputOutputStrings.php"
+            "source/InputOutputMemory.php",
+            "source/InputOutputOperations.php",
+            "source/InputOutputStrings.php",
+            "source/InputOutputTiming.php"
         ]
     },
     "minimum-stability": "stable",
