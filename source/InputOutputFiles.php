@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 namespace danielgp\io_operations;
 
 trait InputOutputFiles
@@ -37,7 +37,7 @@ trait InputOutputFiles
         }
         return $fName;
     }
-    
+
     public function getFileEntireContent($strInputFile)
     {
         $contentInputFile = file($strInputFile, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
@@ -55,7 +55,7 @@ trait InputOutputFiles
         fclose($fJson);
         return $fileContent;
     }
-    
+
     /**
      * returns an array with non-standard holidays from a JSON file
      *
@@ -66,15 +66,13 @@ trait InputOutputFiles
     {
         $jSonContent   = $this->getFileJsonContent($strFilePath, $strFileName);
         $arrayToReturn = json_decode($jSonContent, true);
-        $jsonError     = json_last_error();
-        if ($jsonError == JSON_ERROR_NONE) {
-            return $arrayToReturn;
-        } else {
+        if (json_last_error() != JSON_ERROR_NONE) {
             $fName = $this->gluePathWithFileName($strFilePath, $strFileName);
             throw new \RuntimeException(sprintf('Unable to interpret JSON from %s file...', $fName));
         }
+        return $arrayToReturn;
     }
-    
+
     public function gluePathWithFileName($strFilePath, $strFileName)
     {
         return $strFilePath . DIRECTORY_SEPARATOR . $strFileName;
@@ -85,7 +83,7 @@ trait InputOutputFiles
         $fHandle = fopen($strFileName, $strFileOperationChar);
         if ($fHandle === false) {
             throw new \RuntimeException(sprintf('Unable to open file %s for %s purposes!'
-            . '', $strFileName, $strFileOperationName));
+                    . '', $strFileName, $strFileOperationName));
         }
         return $fHandle;
     }
