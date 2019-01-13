@@ -23,11 +23,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 namespace danielgp\io_operations;
 
 trait InputOutputStrings
 {
+
+    protected function applyStringManipulations($inString, $ruleDetails)
+    {
+        $outString = $inString;
+        if (is_array($ruleDetails)) {
+            $outString = $this->applyStringManipulationsArray($inString, $ruleDetails);
+        } else {
+            $outString = $this->applyStringManipulationsSingle($inString, $ruleDetails);
+        }
+        return $outString;
+    }
+
+    private function applyStringManipulationsArray($inString, $arrayRuleDetails)
+    {
+        $outString = $inString;
+        foreach ($arrayRuleDetails as $strRuleCurrentDetail) {
+            $outString = $this->applyStringManipulationsSingle($outString, $strRuleCurrentDetail);
+        }
+        return $outString;
+    }
+
+    private function applyStringManipulationsSingle($inString, $strManipulationRule)
+    {
+        $outString = $inString;
+        switch ($strManipulationRule) {
+            case 'remove comma followed by double quotes':
+                $outString = str_replace(',"', '', $outString);
+                break;
+            case 'remove dot':
+                $outString = str_replace('.', '', $outString);
+                break;
+            case 'remove double quotes':
+                $outString = str_replace('"', '', $outString);
+                break;
+            case 'remove double quotes followed by comma':
+                $outString = str_replace('",', '', $outString);
+                break;
+            case 'remove pipeline':
+                $outString = str_replace('|', '', $outString);
+                break;
+            case 'remove slash':
+                $outString = str_replace('/', '', $outString);
+                break;
+            case 'replace dash with space':
+                $outString = str_replace('-', ' ', $outString);
+                break;
+            case 'replace comma with dot':
+                $outString = str_replace(',', '.', $outString);
+                break;
+            case 'replace numeric sequence followed by single space':
+                $outString = preg_replace('#([0-9]+ )#', '', $outString);
+                break;
+            case 'trim':
+                $outString = trim($outString);
+                break;
+        }
+        return $outString;
+    }
 
     protected function cleanString($strInput)
     {
@@ -43,4 +101,5 @@ trait InputOutputStrings
     {
         return str_repeat(' ', (4 * $intMultiplier));
     }
+
 }
