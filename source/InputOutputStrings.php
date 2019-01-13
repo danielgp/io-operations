@@ -53,35 +53,26 @@ trait InputOutputStrings
     {
         $outString = $inString;
         switch ($strManipulationRule) {
-            case 'remove comma followed by double quotes':
-                $outString = str_replace(',"', '', $outString);
-                break;
-            case 'remove dot':
-                $outString = str_replace('.', '', $outString);
-                break;
-            case 'remove double quotes':
-                $outString = str_replace('"', '', $outString);
-                break;
-            case 'remove double quotes followed by comma':
-                $outString = str_replace('",', '', $outString);
-                break;
-            case 'remove pipeline':
-                $outString = str_replace('|', '', $outString);
-                break;
-            case 'remove slash':
-                $outString = str_replace('/', '', $outString);
-                break;
-            case 'replace dash with space':
-                $outString = str_replace('-', ' ', $outString);
-                break;
-            case 'replace comma with dot':
-                $outString = str_replace(',', '.', $outString);
-                break;
             case 'replace numeric sequence followed by single space':
-                $outString = preg_replace('#([0-9]+ )#', '', $outString);
+                $outString     = preg_replace('#([0-9]+ )#', '', $outString);
                 break;
             case 'trim':
-                $outString = trim($outString);
+                $outString     = trim($outString);
+                break;
+            default:
+                $arrayStandard = [
+                    'remove comma followed by double quotes' => [',"', '',],
+                    'remove dot'                             => ['.', '',],
+                    'remove double quotes'                   => ['"', '',],
+                    'remove double quotes followed by comma' => ['",', '',],
+                    'remove pipeline'                        => ['|', '',],
+                    'remove slash'                           => ['/', '',],
+                    'replace dash with space'                => ['-', ' ',],
+                    'replace comma with dot'                 => [',', '.',],
+                ];
+                if (array_key_exists($strManipulationRule, $arrayStandard)) {
+                    $outString = str_replace($arrayStandard[0], $arrayStandard[1], $outString);
+                }
                 break;
         }
         return $outString;
