@@ -61,11 +61,13 @@ trait InputOutputStrings
                 break;
             default:
                 $arrayStandard = [
+                    'remove colon'                           => [':', '',],
                     'remove comma followed by double quotes' => [',"', '',],
                     'remove dot'                             => ['.', '',],
                     'remove double quotes'                   => ['"', '',],
                     'remove double quotes followed by comma' => ['",', '',],
                     'remove pipeline'                        => ['|', '',],
+                    'remove semicolon'                       => [';', '',],
                     'remove slash'                           => ['/', '',],
                     'replace dash with space'                => ['-', ' ',],
                     'replace comma with dot'                 => [',', '.',],
