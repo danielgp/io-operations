@@ -51,38 +51,50 @@ trait InputOutputStrings
 
     private function applyStringManipulationsSingle($inString, $strManipulationRule)
     {
-        $outString = $inString;
+        $outStr = $inString;
         switch ($strManipulationRule) {
             case 'replace numeric sequence followed by single space':
-                $outString     = preg_replace('#([0-9]+ )#', '', $outString);
+                $outStr = preg_replace('#([0-9]+ )#', '', $outStr);
                 break;
             case 'trim':
-                $outString     = trim($outString);
+                $outStr = trim($outStr);
                 break;
             default:
-                $arrayStandard = [
-                    'remove colon'                           => [':', '',],
-                    'remove comma followed by double quotes' => [',"', '',],
-                    'remove dot'                             => ['.', '',],
-                    'remove double quotes'                   => ['"', '',],
-                    'remove double quotes followed by comma' => ['",', '',],
-                    'remove pipeline'                        => ['|', '',],
-                    'remove semicolon'                       => [';', '',],
-                    'remove slash'                           => ['/', '',],
-                    'replace dash with space'                => ['-', ' ',],
-                    'replace comma with dot'                 => [',', '.',],
-                ];
-                if (array_key_exists($strManipulationRule, $arrayStandard)) {
-                    $outString = str_replace($arrayStandard[0], $arrayStandard[1], $outString);
+                $aryOut = $this->knownStringPatterns($strManipulationRule);
+                if ($aryOut['Key Exists']) {
+                    $outStr = str_ireplace($aryOut['Attributes']['Original'], $aryOut['Attributes']['Final'], $outStr);
                 }
                 break;
         }
-        return $outString;
+        return $outStr;
     }
 
     protected function cleanString($strInput)
     {
         return str_replace([' ', "\n", "\r"], '', $strInput);
+    }
+
+    private function knownStringPatterns($strIdentifier)
+    {
+        $arrayStandard = [
+            'remove EOL Unix'                        => ['Original' => chr(13), 'Final' => '',],
+            'remove EOL Windows'                     => ['Original' => chr(10) . chr(13), 'Final' => '',],
+            'remove colon'                           => ['Original' => ':', 'Final' => '',],
+            'remove comma followed by double quotes' => ['Original' => ',"', 'Final' => '',],
+            'remove dot'                             => ['Original' => '.', 'Final' => '',],
+            'remove double quotes'                   => ['Original' => '"', 'Final' => '',],
+            'remove double quotes followed by comma' => ['Original' => '",', 'Final' => '',],
+            'remove pipeline'                        => ['Original' => '|', 'Final' => '',],
+            'remove semicolon'                       => ['Original' => ';', 'Final' => '',],
+            'remove slash'                           => ['Original' => '/', 'Final' => '',],
+            'replace dash with space'                => ['Original' => '-', 'Final' => ' ',],
+            'replace comma with dot'                 => ['Original' => ',', 'Final' => '.',],
+        ];
+        $bolKeyExists  = array_key_exists($strIdentifier, $arrayStandard);
+        return [
+            'Key Exists' => $bolKeyExists,
+            'Attributes' => ($bolKeyExists ? $arrayStandard[$strIdentifier] : null),
+        ];
     }
 
     protected function setSeparator($strCharacter)
