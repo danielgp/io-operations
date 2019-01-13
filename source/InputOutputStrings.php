@@ -33,9 +33,9 @@ trait InputOutputStrings
     {
         $outString = $inString;
         if (is_array($ruleDetails)) {
-            $outString = $this->applyStringManipulationsArray($inString, $ruleDetails);
+            $outString = $this->applyStringManipulationsArray($outString, $ruleDetails);
         } else {
-            $outString = $this->applyStringManipulationsSingle($inString, $ruleDetails);
+            $outString = $this->applyStringManipulationsSingle($outString, $ruleDetails);
         }
         return $outString;
     }
