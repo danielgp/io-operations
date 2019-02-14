@@ -37,6 +37,7 @@ trait InputOutputCurl
         $this->handleSecureConnection($chanel, $inScopeUrl, $features);
         curl_setopt($chanel, CURLOPT_URL, $inScopeUrl);
         curl_setopt($chanel, CURLOPT_HEADER, false);
+        $this->setPostingDetails($chanel, $features);
         curl_setopt($chanel, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($chanel, CURLOPT_FRESH_CONNECT, true); //avoid a cached response
         curl_setopt($chanel, CURLOPT_FAILONERROR, true);
