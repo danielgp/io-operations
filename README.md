@@ -8,3 +8,15 @@ This repository is intended to ease Input Output operations from other PHP libra
 ## Who do I talk to? ##
 
 Repository owner is: [Daniel Popiniuc](mailto:danielpopiniuc@gmail.com)
+
+Packagist statistics by poser.pugx.org
+[![License](https://poser.pugx.org/danielgp/io-operations/license)](https://packagist.org/packages/danielgp/io-operations)
+[![Latest Stable Version](https://poser.pugx.org/danielgp/io-operations/v/stable)](https://packagist.org/packages/danielgp/io-operations)
+[![Total Downloads](https://poser.pugx.org/danielgp/io-operations/downloads)](https://packagist.org/packages/danielgp/io-operations)
+[![Monthly Downloads](https://poser.pugx.org/danielgp/io-operations/d/monthly)](https://packagist.org/packages/danielgp/io-operations)
+[![Daily Downloads](https://poser.pugx.org/danielgp/io-operations/d/daily)](https://packagist.org/packages/danielgp/io-operations)
+[![composer.lock](https://poser.pugx.org/danielgp/io-operations/composerlock)](https://packagist.org/packages/danielgp/io-operations)
+
+Code quality analysis
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielgp/io-operations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danielgp/io-operations/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/danielgp/io-operations/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/io-operations/build-status/master)
