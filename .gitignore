@@ -2,3 +2,4 @@ nbproject/private/*
 results/
 vendor/
 composer.lock
+composer.min.json
