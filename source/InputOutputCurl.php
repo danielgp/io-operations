@@ -79,7 +79,7 @@ trait InputOutputCurl
         }
     }
 
-    private function validateUrl($strUrl): string
+    private function validateUrl($strUrl)
     {
         $inScopeUrl = filter_var($strUrl, FILTER_VALIDATE_URL);
         if ($inScopeUrl === false) {
