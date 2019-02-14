@@ -17,6 +17,7 @@
     "autoload": {
         "classmap": [
             "source/InputOutputArrays.php",
+            "source/InputOutputCurl.php",
             "source/InputOutputFiles.php",
             "source/InputOutputMemory.php",
             "source/InputOutputOperations.php",
