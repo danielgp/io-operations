@@ -84,7 +84,7 @@ trait InputOutputFiles
         return $aDetails;
     }
 
-    protected function getFileDetailsRawStatistic(\SplFileInfo $info, $fileGiven)
+    private function getFileDetailsRawStatistic(\SplFileInfo $info, $fileGiven)
     {
         return [
             'File is Dir'        => $info->isDir(),
@@ -141,7 +141,11 @@ trait InputOutputFiles
 
     public function gluePathWithFileName($strFilePath, $strFileName)
     {
-        return $strFilePath . DIRECTORY_SEPARATOR . $strFileName;
+        $sReturn = $strFileName;
+        if (strpos($strFileName, DIRECTORY_SEPARATOR) === false) {
+            $sReturn = $strFilePath . DIRECTORY_SEPARATOR . $strFileName;
+        }
+        return $sReturn;
     }
 
     public function openFileSafelyAndReturnHandle($strFileName, $strFileOperationChar, $strFileOperationName)
