@@ -121,11 +121,16 @@ trait InputOutputFiles
 
     public function getMostRecentFile($strFileFirst, $strFileSecond)
     {
-        $infoFirst  = new \SplFileInfo($strFileFirst);
-        $infoSecond = new \SplFileInfo($strFileSecond);
-        $sReturn    = $strFileFirst;
-        if ($infoFirst->getMTime() <= $infoSecond->getMTime()) {
-            $sReturn = $strFileSecond;
+        $strFileNameFirst = $this->checkFileExistance('', $strFileFirst);
+        $sReturn          = $strFileFirst;
+        if (file_exists($strFileSecond)) {
+            $infoFirst         = new \SplFileInfo($strFileNameFirst);
+            $strFileNameSecond = $this->checkFileExistance('', $strFileSecond);
+            $infoSecond        = new \SplFileInfo($strFileNameSecond);
+            $sReturn           = $strFileFirst;
+            if ($infoFirst->getMTime() <= $infoSecond->getMTime()) {
+                $sReturn = $strFileSecond;
+            }
         }
         return $sReturn;
     }
