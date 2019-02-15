@@ -29,6 +29,8 @@ namespace danielgp\io_operations;
 trait InputOutputFiles
 {
 
+    use InputOutputFilePermissions;
+
     public function checkFileExistance($strFilePath, $strFileName)
     {
         $fName = $this->gluePathWithFileName($strFilePath, $strFileName);

@@ -18,6 +18,7 @@
         "classmap": [
             "source/InputOutputArrays.php",
             "source/InputOutputCurl.php",
+            "source/InputOutputFilePermissions.php",
             "source/InputOutputFiles.php",
             "source/InputOutputMemory.php",
             "source/InputOutputOperations.php",
