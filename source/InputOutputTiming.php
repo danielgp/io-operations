@@ -34,7 +34,7 @@ trait InputOutputTiming
     public $intTimeCounter = 0;
 
     /**
-     * Converts a
+     * Converts a Date from ISO-8601 format into UTC Time zone SQL format
      *
      * @param string $inStrictIso8601DtTm
      * @return string
