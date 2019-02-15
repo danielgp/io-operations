@@ -37,6 +37,7 @@ trait InputOutputCurl
         $this->handleSecureConnection($chanel, $inScopeUrl, $features);
         curl_setopt($chanel, CURLOPT_URL, $inScopeUrl);
         curl_setopt($chanel, CURLOPT_HEADER, false);
+        $this->setPostingDetails($chanel, $features);
         curl_setopt($chanel, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($chanel, CURLOPT_FRESH_CONNECT, true); //avoid a cached response
         curl_setopt($chanel, CURLOPT_FAILONERROR, true);
@@ -79,7 +80,7 @@ trait InputOutputCurl
         }
     }
 
-    private function validateUrl($strUrl): string
+    private function validateUrl($strUrl)
     {
         $inScopeUrl = filter_var($strUrl, FILTER_VALIDATE_URL);
         if ($inScopeUrl === false) {
