@@ -38,24 +38,6 @@ trait InputOutputFiles
         return $fName;
     }
 
-    public function getFileEntireContent($strInputFile)
-    {
-        $contentInputFile = file($strInputFile, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-        if ($contentInputFile === false) {
-            throw new \RuntimeException(sprintf('Unable to read file %s...', $strInputFile));
-        }
-        return $contentInputFile;
-    }
-
-    public function getFileJsonContent($strFilePath, $strFileName)
-    {
-        $fName       = $this->checkFileExistance($strFilePath, $strFileName);
-        $fJson       = $this->openFileSafelyAndReturnHandle($fName, 'r', 'read');
-        $fileContent = fread($fJson, ((int) filesize($fName)));
-        fclose($fJson);
-        return $fileContent;
-    }
-
     /**
      * returns an array with non-standard holidays from a JSON file
      *
@@ -71,6 +53,88 @@ trait InputOutputFiles
             throw new \RuntimeException(sprintf('Unable to interpret JSON from %s file...', $fName));
         }
         return $arrayToReturn;
+    }
+
+    /**
+     * Returns the details about Communicator (current) file
+     * w/o any kind of verification of file existence
+     *
+     * @param string $fileGiven
+     * @return array
+     */
+    public function getFileDetailsRaw($fileGiven)
+    {
+        $info              = new \SplFileInfo($fileGiven);
+        $aFileBasicDetails = [
+            'File Extension'         => $info->getExtension(),
+            'File Group'             => $info->getGroup(),
+            'File Inode'             => $info->getInode(),
+            'File Link Target'       => ($info->isLink() ? $info->getLinkTarget() : '-'),
+            'File Name'              => $info->getBasename('.' . $info->getExtension()),
+            'File Name w. Extension' => $info->getFilename(),
+            'File Owner'             => $info->getOwner(),
+            'File Path'              => $info->getPath(),
+            'Name'                   => $info->getRealPath(),
+            'Type'                   => $info->getType(),
+        ];
+        $aDetails          = array_merge($aFileBasicDetails, $this->getFileDetailsRawStatistic($info, $fileGiven));
+        ksort($aDetails);
+        return $aDetails;
+    }
+
+    protected function getFileDetailsRawStatistic(\SplFileInfo $info, $fileGiven)
+    {
+        return [
+            'File is Dir'        => $info->isDir(),
+            'File is Executable' => $info->isExecutable(),
+            'File is File'       => $info->isFile(),
+            'File is Link'       => $info->isLink(),
+            'File is Readable'   => $info->isReadable(),
+            'File is Writable'   => $info->isWritable(),
+            'File Permissions'   => $this->explainPerms($info->getPerms()),
+            'Size'               => $info->getSize(),
+            'Sha1'               => sha1_file($fileGiven),
+            'Timestamp Accessed' => $this->getFileTimes($info->getATime()),
+            'Timestamp Changed'  => $this->getFileTimes($info->getCTime()),
+            'Timestamp Modified' => $this->getFileTimes($info->getMTime()),
+        ];
+    }
+
+    public function getFileEntireContent($strInputFile)
+    {
+        $contentInputFile = file($strInputFile, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+        if ($contentInputFile === false) {
+            throw new \RuntimeException(sprintf('Unable to read file %s...', $strInputFile));
+        }
+        return $contentInputFile;
+    }
+
+    private function getFileTimes($timeAsPhpNumber)
+    {
+        return [
+            'PHP number' => $timeAsPhpNumber,
+            'SQL format' => date('Y-m-d H:i:s', $timeAsPhpNumber),
+        ];
+    }
+
+    public function getMostRecentFile($strFileFirst, $strFileSecond)
+    {
+        $infoFirst  = new \SplFileInfo($strFileFirst);
+        $infoSecond = new \SplFileInfo($strFileSecond);
+        $sReturn    = $strFileFirst;
+        if ($infoFirst->getMTime() <= $infoSecond->getMTime()) {
+            $sReturn = $strFileSecond;
+        }
+        return $sReturn;
+    }
+
+    public function getFileJsonContent($strFilePath, $strFileName)
+    {
+        $fName       = $this->checkFileExistance($strFilePath, $strFileName);
+        $fJson       = $this->openFileSafelyAndReturnHandle($fName, 'r', 'read');
+        $fileContent = fread($fJson, ((int) filesize($fName)));
+        fclose($fJson);
+        return $fileContent;
     }
 
     public function gluePathWithFileName($strFilePath, $strFileName)
