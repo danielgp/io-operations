@@ -68,9 +68,11 @@ trait InputOutputCurl
 
     private function setPostingDetails($chanel, $features)
     {
-        curl_setopt($chanel, CURLOPT_POST, true);
-        curl_setopt($chanel, CURLOPT_POSTFIELDS, $features['PostFields']);
-        curl_setopt($chanel, CURLOPT_HTTPHEADER, $features['HttpHeader']);
+        if (array_key_exists('PostFields', $features)) {
+            curl_setopt($chanel, CURLOPT_POST, true);
+            curl_setopt($chanel, CURLOPT_POSTFIELDS, $features['PostFields']);
+            curl_setopt($chanel, CURLOPT_HTTPHEADER, $features['HttpHeader']);
+        }
     }
 
     private function setUserAgent($chanel, $features)
