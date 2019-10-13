@@ -89,6 +89,7 @@ trait InputOutputStrings
             'remove slash'                           => ['Original' => '/', 'Final' => '',],
             'replace dash with space'                => ['Original' => '-', 'Final' => ' ',],
             'replace comma with dot'                 => ['Original' => ',', 'Final' => '.',],
+            'replace circumflex accent with dot'     => ['Original' => '^', 'Final' => '.',],
         ];
         $bolKeyExists  = array_key_exists($strIdentifier, $arrayStandard);
         return [
