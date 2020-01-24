@@ -2,7 +2,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2015 Daniel Popiniuc
+Copyright (c) 2015 - 2019 Daniel Popiniuc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ THE SOFTWARE.
 -->
 <phpunit 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/7.3/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.5/phpunit.xsd"
     backupGlobals="true"
     backupStaticAttributes="false"
     beStrictAboutChangesToGlobalState="false"
