@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Daniel Popiniuc
+ * Copyright (c) 2015 - 2019 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,12 @@ namespace danielgp\IOExcel;
 class IOExcelTest extends \PHPUnit\Framework\TestCase
 {
 
-    public static function setUpBeforeClass()
+    protected function setUp()
     {
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
-            . DIRECTORY_SEPARATOR . 'autoload.php';
+                . DIRECTORY_SEPARATOR . 'autoload.php';
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'source', __DIR__)
-            . DIRECTORY_SEPARATOR . 'IOExcel.php';
+                . DIRECTORY_SEPARATOR . 'IOExcel.php';
     }
 
     /**
@@ -174,7 +174,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
     {
         $mock                = $this->getMockForTrait(IOExcel::class);
         $strFileNameWithPath = str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', '', __DIR__)
-            . DIRECTORY_SEPARATOR . 'test_results.xlsx';
+                . DIRECTORY_SEPARATOR . 'test_results.xlsx';
         $mock->setArrayToExcel([
             'Filename'   => $strFileNameWithPath,
             'Worksheets' => [
