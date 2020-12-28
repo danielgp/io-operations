@@ -255,13 +255,14 @@ trait IOExcel
      */
     private function setExcelRowCellContent(array $inputs)
     {
+        $clsDate       = new \PhpOffice\PhpSpreadsheet\Shared\Date();
         $columnCounter = $inputs['StartingColumnIndex'];
-        foreach ($inputs['RowValues'] as $value2) {
+        foreach ($inputs['RowValues'] as $key2 => $value2) {
             $crCol          = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
             $this->objPHPExcel
                     ->getActiveSheet()
                     ->getColumnDimension($crCol)
-                    ->setAutoSize(false);
+                ->setAutoSize(true);
             $crtCellAddress = $crCol . $inputs['CurrentRowIndex'];
             $cntLen         = strlen($value2);
             if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
@@ -275,10 +276,28 @@ trait IOExcel
                         ->getStyle($crtCellAddress)
                         ->getNumberFormat()
                         ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DATETIME);
+            } elseif (preg_match('/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}(:\d{1,2})?)?$/iu', $value2) && !is_integer($value2) && !is_numeric($value2)) {
+                $this->objPHPExcel
+                    ->getActiveSheet()
+                    ->SetCellValue($crtCellAddress, $clsDate->stringToExcel($value2));
+                if (!array_key_exists($key2, $inputs['ContentFormatCode'])) {
+                    $inputs['ContentFormatCode'][$key2] = \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDD2;
+                }
+                $this->objPHPExcel
+                    ->getActiveSheet()
+                    ->getStyle($crtCellAddress)
+                    ->getNumberFormat()
+                    ->setFormatCode($inputs['ContentFormatCode'][$key2]);
             } else {
+                if (array_key_exists($key2, $inputs['ContentFormatting'])) {
                 $this->objPHPExcel
                         ->getActiveSheet()
-                        ->SetCellValue($crtCellAddress, strip_tags($value2));
+                        ->setCellValueExplicit($crtCellAddress, strip_tags($value2), $inputs['ContentFormatting'][$key2]);
+                } else {
+                    $this->objPHPExcel
+                        ->getActiveSheet()
+                        ->setCellValue($crtCellAddress, strip_tags($value2));
+                }
             }
             $columnCounter += 1;
         }
