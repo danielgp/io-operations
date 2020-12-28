@@ -131,19 +131,26 @@ trait IOExcel
             $this->objPHPExcel->getActiveSheet()->setTitle($wkValue['Name']);
             foreach ($wkValue['Content'] as $cntValue) {
                 $rowIndex = $cntValue['StartingRowIndex'];
-                foreach ($cntValue['ContentArray'] as $key2 => $value) {
+                foreach ($cntValue['ContentArray'] as $key2 => $value2) {
                     if ($key2 == 0) {
                         $this->setExcelHeaderCellContent([
                             'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
                             'StartingRowIndex'    => $rowIndex,
-                            'RowValues'           => array_keys($value),
+                            'RowValues'           => array_keys($value2),
                         ]);
                     }
-                    $this->setExcelRowCellContent([
+                    $aRow = [
                         'StartingColumnIndex' => $cntValue['StartingColumnIndex'],
                         'CurrentRowIndex'     => ($rowIndex + 1),
-                        'RowValues'           => $value,
-                    ]);
+                        'RowValues'           => $value2,
+                    ];
+                    if (array_key_exists('ContentFormatCode', $cntValue)) {
+                        $aRow['ContentFormatCode'] = $cntValue['ContentFormatCode'];
+                    }
+                    if (array_key_exists('ContentFormatting', $cntValue)) {
+                        $aRow['ContentFormatting'] = $cntValue['ContentFormatting'];
+                    }
+                    $this->setExcelRowCellContent($aRow);
                     $rowIndex++;
                 }
                 $this->setExcelWorksheetPagination();
