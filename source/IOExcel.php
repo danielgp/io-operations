@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2018 Daniel Popiniuc
+ * Copyright (c) 2015 - 2020 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -192,36 +192,36 @@ trait IOExcel
         foreach ($inputs['RowValues'] as $value2) {
             $crtCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
             $this->objPHPExcel
-                    ->getActiveSheet()
-                    ->getColumnDimension($crtCol)
-                    ->setAutoSize(true);
+                ->getActiveSheet()
+                ->getColumnDimension($crtCol)
+                ->setAutoSize(true);
             $this->objPHPExcel
-                    ->getActiveSheet()
-                    ->setCellValue($crtCol . $inputs['StartingRowIndex'], $value2);
+                ->getActiveSheet()
+                ->setCellValue($crtCol . $inputs['StartingRowIndex'], $value2);
             $this->objPHPExcel
-                    ->getActiveSheet()
-                    ->getStyle($crtCol . $inputs['StartingRowIndex'])
-                    ->getFill()
-                    ->applyFromArray([
-                        'type'       => 'solid',
-                        'startcolor' => ['rgb' => 'CCCCCC'],
-                        'endcolor'   => ['rgb' => 'CCCCCC'],
+                ->getActiveSheet()
+                ->getStyle($crtCol . $inputs['StartingRowIndex'])
+                ->getFill()
+                ->applyFromArray([
+                    'type'       => 'solid',
+                    'startcolor' => ['rgb' => 'CCCCCC'],
+                    'endcolor'   => ['rgb' => 'CCCCCC'],
             ]);
             $this->objPHPExcel
-                    ->getActiveSheet()
-                    ->getStyle($crtCol . $inputs['StartingRowIndex'])
-                    ->applyFromArray([
-                        'font' => [
-                            'bold'  => true,
-                            'color' => ['rgb' => '000000'],
-                        ]
+                ->getActiveSheet()
+                ->getStyle($crtCol . $inputs['StartingRowIndex'])
+                ->applyFromArray([
+                    'font' => [
+                        'bold'  => true,
+                        'color' => ['rgb' => '000000'],
+                    ]
                     ]
             );
             $columnCounter++;
         }
         $this->objPHPExcel
-                ->getActiveSheet()
-                ->calculateColumnWidths();
+            ->getActiveSheet()
+            ->calculateColumnWidths();
     }
 
     /**
@@ -260,8 +260,8 @@ trait IOExcel
         foreach ($inputs['RowValues'] as $key2 => $value2) {
             $crCol          = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
             $this->objPHPExcel
-                    ->getActiveSheet()
-                    ->getColumnDimension($crCol)
+                ->getActiveSheet()
+                ->getColumnDimension($crCol)
                 ->setAutoSize(true);
             $crtCellAddress = $crCol . $inputs['CurrentRowIndex'];
             $cntLen         = strlen($value2);
@@ -269,13 +269,13 @@ trait IOExcel
                 $value2 = '';
             } elseif (in_array($cntLen, [7, 8, 9]) && (($cntLen - strlen(str_replace(':', '', $value2))) == 2)) {
                 $this->objPHPExcel
-                        ->getActiveSheet()
-                        ->SetCellValue($crtCellAddress, ($this->setLocalTime2Seconds($value2) / 60 / 60 / 24));
+                    ->getActiveSheet()
+                    ->SetCellValue($crtCellAddress, ($this->setLocalTime2Seconds($value2) / 60 / 60 / 24));
                 $this->objPHPExcel
-                        ->getActiveSheet()
-                        ->getStyle($crtCellAddress)
-                        ->getNumberFormat()
-                        ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DATETIME);
+                    ->getActiveSheet()
+                    ->getStyle($crtCellAddress)
+                    ->getNumberFormat()
+                    ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DATETIME);
             } elseif (preg_match('/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}(:\d{1,2})?)?$/iu', $value2) && !is_integer($value2) && !is_numeric($value2)) {
                 $this->objPHPExcel
                     ->getActiveSheet()
@@ -290,7 +290,7 @@ trait IOExcel
                     ->setFormatCode($inputs['ContentFormatCode'][$key2]);
             } else {
                 if (array_key_exists($key2, $inputs['ContentFormatting'])) {
-                $this->objPHPExcel
+                    $this->objPHPExcel
                         ->getActiveSheet()
                         ->setCellValueExplicit($crtCellAddress, strip_tags($value2), $inputs['ContentFormatting'][$key2]);
                 } else {
@@ -331,9 +331,9 @@ trait IOExcel
     {
         // repeat coloumn headings for every new page...
         $this->objPHPExcel
-                ->getActiveSheet()
-                ->getPageSetup()
-                ->setRowsToRepeatAtTopByStartAndEnd(1, $inputs['HeaderRowIndex']);
+            ->getActiveSheet()
+            ->getPageSetup()
+            ->setRowsToRepeatAtTopByStartAndEnd(1, $inputs['HeaderRowIndex']);
         // activate AutoFilter
         $autoFilterArea = implode('', [
             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($inputs['StartingColumnIndex']),
@@ -343,12 +343,12 @@ trait IOExcel
             $this->objPHPExcel->getActiveSheet()->getHighestDataRow(),
         ]);
         $this->objPHPExcel
-                ->getActiveSheet()
-                ->setAutoFilter($autoFilterArea);
+            ->getActiveSheet()
+            ->setAutoFilter($autoFilterArea);
         // freeze 1st top row
         $this->objPHPExcel
-                ->getActiveSheet()
-                ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
+            ->getActiveSheet()
+            ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
     }
 
     private function setForcedHeadersWhenNotCli($strFileName)
