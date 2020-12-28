@@ -162,14 +162,21 @@ trait IOExcel
         }
         $this->objPHPExcel->setActiveSheetIndex(0);
         $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
-        if (!in_array(PHP_SAPI, ['cli', 'cli-server'])) { // output created content to browser OR skip-it otherwise
-            $this->setForcedHeadersWhenNotCli($inFeatures['Filename']);
+        $bolForceSave           = false;
+        if (array_key_exists('ForceSave', $inFeatures)) {
+            $bolForceSave = $inFeatures['ForceSave'];
         }
         $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($this->objPHPExcel);
-        if (in_array(PHP_SAPI, ['cli', 'cli-server'])) {
-            $objWriter->save($inFeatures['Filename']);
+        if ($bolForceSave || in_array(PHP_SAPI, ['cli', 'cli-server'])) {
+            $strFileNamePath = '';
+            if (array_key_exists('FilePath', $inFeatures)) {
+                $strFileNamePath = $inFeatures['FilePath'];
+            }
+            $objWriter->save($strFileNamePath . $inFeatures['Filename']);
         } else {
+            $this->setForcedHeadersWhenNotCli($inFeatures['Filename']);
             $objWriter->save('php://output');
+            ob_flush();
         }
         unset($this->objPHPExcel);
     }
@@ -208,7 +215,8 @@ trait IOExcel
                             'bold'  => true,
                             'color' => ['rgb' => '000000'],
                         ]
-            ]);
+                    ]
+            );
             $columnCounter++;
         }
         $this->objPHPExcel
