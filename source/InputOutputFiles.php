@@ -96,6 +96,7 @@ trait InputOutputFiles
             'File Permissions'   => $this->explainPerms($info->getPerms()),
             'Size'               => $info->getSize(),
             'Sha1'               => sha1_file($fileGiven),
+            'Sha256'             => hash_file('sha256', $fileGiven),
             'Timestamp Accessed' => $this->getFileTimes($info->getATime()),
             'Timestamp Changed'  => $this->getFileTimes($info->getCTime()),
             'Timestamp Modified' => $this->getFileTimes($info->getMTime()),
