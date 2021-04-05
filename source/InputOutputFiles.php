@@ -28,7 +28,6 @@ namespace danielgp\io_operations;
 
 trait InputOutputFiles
 {
-
     use InputOutputFilePermissions;
 
     public function checkFileExistance($strFilePath, $strFileName)
@@ -159,7 +158,7 @@ trait InputOutputFiles
         $fHandle = fopen($strFileName, $strFileOperationChar);
         if ($fHandle === false) {
             throw new \RuntimeException(sprintf('Unable to open file %s for %s purposes!'
-                    . '', $strFileName, $strFileOperationName));
+                . '', $strFileName, $strFileOperationName));
         }
         return $fHandle;
     }

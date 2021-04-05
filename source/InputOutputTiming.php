@@ -28,7 +28,6 @@ namespace danielgp\io_operations;
 
 trait InputOutputTiming
 {
-
     use InputOutputMemory;
 
     public $intTimeCounter = 0;

@@ -107,5 +107,4 @@ trait InputOutputStrings
     {
         return str_repeat(' ', (4 * $intMultiplier));
     }
-
 }

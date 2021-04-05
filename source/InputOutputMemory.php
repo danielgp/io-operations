@@ -23,12 +23,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 namespace danielgp\io_operations;
 
 trait InputOutputMemory
 {
-    
+
     public function getMemoryUsageString()
     {
         return '<span style="color:grey!important;font-weight:bold;">['

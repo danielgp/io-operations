@@ -66,7 +66,7 @@ trait InputOutputArrays
         $contentToWrite = json_encode($inputParameters, $encodingFlags);
         if ($contentToWrite === false) {
             throw new \RuntimeException(sprintf('Unable to encode string into JSON (code %s with message %s)', ''
-                    . json_last_error(), json_last_error_msg()));
+                . json_last_error(), json_last_error_msg()));
         }
         return utf8_encode($contentToWrite);
     }
