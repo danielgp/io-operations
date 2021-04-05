@@ -77,7 +77,13 @@ trait InputOutputTiming
 
     public function getTimestampFloat($crtTime)
     {
-        return ($crtTime['sec'] + $crtTime['usec'] / pow(10, 6));
+        $sReturn = null;
+        if (PHP_VERSION_ID < 70307) {
+            $sReturn = hrtime(true)[1] / pow(10, 6);
+        } else {
+            $sReturn = ($crtTime['sec'] + $crtTime['usec'] / pow(10, 6));
+        }
+        return $sReturn;
     }
 
     private function getTimestampString($dateTime)
