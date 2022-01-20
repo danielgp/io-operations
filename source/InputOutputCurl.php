@@ -35,6 +35,7 @@ trait InputOutputCurl
         $this->setUserAgent($chanel, $features);
         $inScopeUrl = $this->validateUrl($fullURL);
         $this->handleSecureConnection($chanel, $inScopeUrl, $features);
+        $this->setForceIpv4($chanel, $features);
         curl_setopt($chanel, CURLOPT_URL, $inScopeUrl);
         curl_setopt($chanel, CURLOPT_HEADER, false);
         $this->setPostingDetails($chanel, $features);
@@ -63,6 +64,15 @@ trait InputOutputCurl
             }
             curl_setopt($chanel, CURLOPT_SSL_VERIFYHOST, $chk);
             curl_setopt($chanel, CURLOPT_SSL_VERIFYPEER, $chk);
+        }
+    }
+
+    private function setForceIpv4($chanel, $features)
+    {
+        if (array_key_exists('forceIpV4', $features)) {
+            if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
+                curl_setopt($chanel, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            }
         }
     }
 
