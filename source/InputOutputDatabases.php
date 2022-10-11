@@ -131,7 +131,7 @@ trait InputOutputDatabases
     public function getResultsUsingQuery(string $strQuery, string $strFetchingType = \PDO::FETCH_ASSOC)
     {
         if (is_null($this->objConnection)) {
-            $this->establishDatabaseConnection();
+            return null;
         }
         $result = [];
         try {
