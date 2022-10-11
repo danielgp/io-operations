@@ -34,21 +34,6 @@ trait InputOutputDatabases
     private $bolDebugText           = false;
     private $objConnection          = null;
 
-    public function establishDatabaseConnection()
-    {
-        $this->establishDatabaseConnectionFlexible('MySQL', [
-            'Charset'        => 'utf8mb4',
-            'Collation'      => 'utf8mb4_unicode_ci',
-            'Database'       => MYSQL_DATABASE,
-            'Host'           => MYSQL_HOST,
-            'Port'           => MYSQL_PORT,
-            'Authentication' => [
-                'Username' => MYSQL_USERNAME,
-                'Password' => MYSQL_PASSWORD,
-            ]
-        ]);
-    }
-
     public function establishDatabaseConnectionFlexible(string $strDatabaseType, array $arrayConnectionParameters)
     {
         if (http_response_code() != 200) {
