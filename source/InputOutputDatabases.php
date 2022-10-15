@@ -128,6 +128,23 @@ trait InputOutputDatabases
         return json_encode($arrayResults, $encodingFlags);
     }
 
+    public function getResultsThroughVerification(array $arrayResult)
+    {
+        $strReturn = $arrayResult;
+        if (is_null($arrayResult)) {
+            http_response_code(403);
+            $this->strErrorText = 'NU există date pe server cu valorile introduse!';
+            $this->exposeDebugText('No data (NULL): ' . $this->strErrorText);
+        } elseif (is_array($arrayResult)) {
+            if ($arrayResult == []) {
+                http_response_code(403);
+                $this->strErrorText = 'NU există date pe server cu valorile introduse!';
+                $this->exposeDebugText('Empty results: ' . $this->strErrorText);
+            }
+        }
+        return $strReturn;
+    }
+
     public function getResultsUsingQuery(string $strQuery, string $strFetchingType = \PDO::FETCH_ASSOC)
     {
         if (is_null($this->objConnection)) {
@@ -173,22 +190,5 @@ trait InputOutputDatabases
             ]);
             $this->exposeDebugText('After Query execution: ' . $this->strErrorText);
         }
-    }
-
-    public function getResultsThroughVerification(array $arrayResult)
-    {
-        $strReturn = $arrayResult;
-        if (is_null($arrayResult)) {
-            http_response_code(403);
-            $this->strErrorText = 'NU există date pe server cu valorile introduse!';
-            $this->exposeDebugText('No data (NULL): ' . $this->strErrorText);
-        } elseif (is_array($arrayResult)) {
-            if ($arrayResult == []) {
-                http_response_code(403);
-                $this->strErrorText = 'NU există date pe server cu valorile introduse!';
-                $this->exposeDebugText('Empty results: ' . $this->strErrorText);
-            }
-        }
-        return $strReturn;
     }
 }
