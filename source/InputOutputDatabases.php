@@ -191,4 +191,13 @@ trait InputOutputDatabases
             $this->exposeDebugText('After Query execution: ' . $this->strErrorText);
         }
     }
+
+    public function getStoredQuery($objClass, $label, $given_parameters = null)
+    {
+        $sReturn = call_user_func_array([$objClass, 'setRightQuery'], [$label, $given_parameters]);
+        if ($sReturn === false) {
+            $this->exposeDebug('<b>' . $label . '</b> was not defined!');
+        }
+        return $sReturn;
+    }
 }
