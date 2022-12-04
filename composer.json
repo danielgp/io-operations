@@ -23,6 +23,7 @@
             "source/InputOutputFiles.php",
             "source/InputOutputMemory.php",
             "source/InputOutputOperations.php",
+            "source/InputOutputQueries.php",
             "source/InputOutputStrings.php",
             "source/InputOutputTiming.php"
         ]
