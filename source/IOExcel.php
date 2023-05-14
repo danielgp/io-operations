@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2020 Daniel Popiniuc
+ * Copyright (c) 2015 - 2023 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,8 +45,7 @@ trait IOExcel
      * @param array $check Checking messages
      * @return array|string[]
      */
-    private function checkInputFeatureContent($inFeaturesWorksheets, $check)
-    {
+    private function checkInputFeatureContent($inFeaturesWorksheets, $check) {
         $aReturn = [];
         foreach ($inFeaturesWorksheets as $key => $value) {
             if (!array_key_exists('Name', $value)) {
@@ -69,8 +68,7 @@ trait IOExcel
      * @param array $inFeatures Predefined array of attributes
      * @return array|string[]
      */
-    private function checkInputFeatures(array $inFeatures)
-    {
+    private function checkInputFeatures(array $inFeatures) {
         $aReturn = [];
         $check   = $this->internalCheckingErrorMessages();
         if ($inFeatures === []) {
@@ -96,8 +94,7 @@ trait IOExcel
         }
     }
 
-    public function internalCheckingErrorMessages()
-    {
+    public function internalCheckingErrorMessages() {
         return [
             '1'   => 'Check 1: Missing parameters!',
             '2'   => 'Check 2: No filename provided!',
@@ -116,8 +113,7 @@ trait IOExcel
      *
      * @param array $inFeatures Predefined array of attributes
      */
-    public function setArrayToExcel(array $inFeatures)
-    {
+    public function setArrayToExcel(array $inFeatures) {
         $this->checkInputFeatures($inFeatures);
         $this->objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         if (isset($inFeatures['Properties'])) {
@@ -146,6 +142,9 @@ trait IOExcel
                     ];
                     if (array_key_exists('ContentFormatCode', $cntValue)) {
                         $aRow['ContentFormatCode'] = $cntValue['ContentFormatCode'];
+                    }
+                    if (array_key_exists('WrapText', $cntValue)) {
+                        $aRow['WrapText'] = $cntValue['WrapText'];
                     }
                     if (array_key_exists('ContentFormatting', $cntValue)) {
                         $aRow['ContentFormatting'] = $cntValue['ContentFormatting'];
@@ -198,8 +197,7 @@ trait IOExcel
      *
      * @param array $inputs
      */
-    private function setExcelHeaderCellContent(array $inputs)
-    {
+    private function setExcelHeaderCellContent(array $inputs) {
         $columnCounter = $inputs['StartingColumnIndex'];
         foreach ($inputs['RowValues'] as $value2) {
             $crtCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
@@ -227,8 +225,7 @@ trait IOExcel
                         'bold'  => true,
                         'color' => ['rgb' => '000000'],
                     ]
-                    ]
-            );
+            ]);
             $columnCounter++;
         }
         $this->objPHPExcel
@@ -241,8 +238,7 @@ trait IOExcel
      *
      * @param array $inProperties
      */
-    private function setExcelProperties(array $inProperties)
-    {
+    private function setExcelProperties(array $inProperties) {
         if (array_key_exists('Creator', $inProperties)) {
             $this->objPHPExcel->getProperties()->setCreator($inProperties['Creator']);
         }
@@ -265,8 +261,7 @@ trait IOExcel
      *
      * @param array $inputs
      */
-    private function setExcelRowCellContent(array $inputs)
-    {
+    private function setExcelRowCellContent(array $inputs) {
         $clsDate       = new \PhpOffice\PhpSpreadsheet\Shared\Date();
         $columnCounter = $inputs['StartingColumnIndex'];
         foreach ($inputs['RowValues'] as $key2 => $value2) {
@@ -301,7 +296,14 @@ trait IOExcel
                     ->getNumberFormat()
                     ->setFormatCode($inputs['ContentFormatCode'][$key2]);
             } else {
-                if (array_key_exists($key2, $inputs['ContentFormatting'])) {
+                if (array_key_exists('WrapText', $inputs) && in_array($key2, $inputs['WrapText'])) {
+                    $this->objPHPExcel
+                        ->getActiveSheet()
+                        ->getStyle($crtCellAddress)
+                        ->getAlignment()
+                        ->setWrapText(true);
+                }
+                if (array_key_exists('ContentFormatting', $inputs) && array_key_exists($key2, $inputs['ContentFormatting'])) {
                     $this->objPHPExcel
                         ->getActiveSheet()
                         ->setCellValueExplicit($crtCellAddress, strip_tags($value2), $inputs['ContentFormatting'][$key2]);
@@ -319,8 +321,7 @@ trait IOExcel
      * sets the Pagination
      *
      */
-    private function setExcelWorksheetPagination()
-    {
+    private function setExcelWorksheetPagination() {
         $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
         $this->objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9); //coresponding to A4
         $margin = 0.7 / 2.54; // margin is set in inches (0.7cm)
@@ -339,8 +340,7 @@ trait IOExcel
      *
      * @param array $inputs
      */
-    private function setExcelWorksheetUsability($inputs)
-    {
+    private function setExcelWorksheetUsability($inputs) {
         // repeat coloumn headings for every new page...
         $this->objPHPExcel
             ->getActiveSheet()
@@ -363,8 +363,7 @@ trait IOExcel
             ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
     }
 
-    private function setForcedHeadersWhenNotCli($strFileName)
-    {
+    private function setForcedHeadersWhenNotCli($strFileName) {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Pragma: private');
         header('Cache-control: private, must-revalidate');
@@ -378,8 +377,7 @@ trait IOExcel
      * @param string $intRsqlTime
      * @return string
      */
-    private function setLocalTime2Seconds($intRsqlTime)
-    {
+    private function setLocalTime2Seconds($intRsqlTime) {
         $sign = '';
         if (is_null($intRsqlTime) || ($intRsqlTime == '')) {
             $intRsqlTime = '00:00:00';
