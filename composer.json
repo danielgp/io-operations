@@ -11,11 +11,11 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ^7.3 || ^7.4",
-        "danielgp/network-components": ">=1.4",
-        "doctrine/cache": "^1",
-        "piwik/device-detector": "^3",
-        "symfony/http-foundation": ">=5.0.7"
+        "php":                          "^7.2 || ^7.3 || ^7.4 || ^8.0 || ^8.1 || ^8.2",
+        "danielgp/network-components":  ">=1.4",
+        "doctrine/cache":               "^1",
+        "matomo/device-detector":       "^6",
+        "symfony/http-foundation":      ">=6.3"
     },
     "autoload": {
         "psr-4": {
