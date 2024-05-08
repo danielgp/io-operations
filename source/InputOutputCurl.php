@@ -39,13 +39,16 @@ trait InputOutputCurl
         curl_setopt($chanel, CURLOPT_URL, $inScopeUrl);
         curl_setopt($chanel, CURLOPT_HEADER, false);
         $this->setPostingDetails($chanel, $features);
+        if (array_key_exists('HttpHeader', $features) && !array_key_exists('PostFields', $features)) {
+            curl_setopt($chanel, CURLOPT_HTTPHEADER, $features['HttpHeader']);
+        }
         curl_setopt($chanel, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($chanel, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($chanel, CURLOPT_MAXREDIRS, 10);
         curl_setopt($chanel, CURLOPT_FRESH_CONNECT, true); //avoid a cached response
         curl_setopt($chanel, CURLOPT_FAILONERROR, true);
         curl_setopt($chanel, CURLOPT_TCP_FASTOPEN, true);
-        $aReturn    = [
+        $aReturn = [
             'response' => curl_exec($chanel),
             'errNo'    => curl_errno($chanel),
             'errMsg'   => curl_error($chanel),
