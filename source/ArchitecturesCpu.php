@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace danielgp\browser_agent_info;
+namespace danielgp\io_operations;
 
 trait ArchiecturesCpu
 {
