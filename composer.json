@@ -26,6 +26,7 @@
             "source/InputOutputFilePermissions.php",
             "source/InputOutputFiles.php",
             "source/InputOutputMemory.php",
+            "source/InputOutputNetworkComponents.php",
             "source/InputOutputOperations.php",
             "source/InputOutputQueries.php",
             "source/InputOutputStrings.php",

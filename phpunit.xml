@@ -48,7 +48,7 @@ THE SOFTWARE.
     timeoutForLargeTests="60"
     verbose="true">
     <testsuites>
-        <testsuite name="NetworkComponentsTesting">
+        <testsuite name="InputOutputNetworkComponentsTesting">
             <directory suffix="Test.php">tests/php-unit</directory>
         </testsuite>
     </testsuites>

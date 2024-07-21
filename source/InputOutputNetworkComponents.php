@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Daniel Popiniuc
+ * Copyright (c) 2015 - 2024 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@
  *
  */
 
-namespace danielgp\network_components;
+namespace danielgp\io_operations;
 
-trait NetworkComponentsByDanielGP
+trait InputOutputNetworkComponents
 {
 
     /**
