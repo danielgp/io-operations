@@ -11,15 +11,15 @@
         }
     ],
     "require": {
-        "php":                          "^7.2 || ^7.3 || ^7.4 || ^8.0 || ^8.1 || ^8.2",
-        "danielgp/network-components":  ">=1.4",
-        "doctrine/cache":               "^1",
+        "php":                          "^7.2 || ^7.3 || ^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3",
+        "danielgp/io-operations":       ">=1.2.0",
+        "doctrine/cache":               "^2",
         "matomo/device-detector":       "^6",
-        "symfony/http-foundation":      ">=6.3"
+        "symfony/http-foundation":      "^7"
     },
     "autoload": {
         "psr-4": {
-            "danielgp\\network_components\\source\\": "vendor/danielgp/network-components/source/",
+            "danielgp\\io_operations\\source\\": "vendor/danielgp/io-operations/source/",
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [
