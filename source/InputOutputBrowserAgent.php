@@ -35,6 +35,7 @@ namespace danielgp\io_operations;
  */
 trait InputOutputBrowserAgent
 {
+
     use InputOutputNetworkComponents,
         ArchiecturesCpu;
 
@@ -127,10 +128,6 @@ trait InputOutputBrowserAgent
     {
         $userAgent      = $this->getUserAgentByCommonLib();
         $devDetectClass = new \DeviceDetector\DeviceDetector($userAgent);
-        if (is_null($tmpFolder)) {
-            $tmpFolder = '../../tmp/DoctrineCache/';
-        }
-        $devDetectClass->setCache(new \Doctrine\Common\Cache\PhpFileCache($tmpFolder));
         $devDetectClass->discardBotInformation();
         $devDetectClass->parse();
         if ($devDetectClass->isBot()) {
