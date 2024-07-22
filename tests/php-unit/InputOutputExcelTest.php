@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2019 Daniel Popiniuc
+ * Copyright (c) 2015 - 2024 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@
  *
  */
 
-namespace danielgp\IOExcel;
+namespace danielgp\io_operations;
 
-class IOExcelTest extends \PHPUnit\Framework\TestCase
+class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
 {
 
     protected function setUp()
@@ -36,7 +36,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
                 . DIRECTORY_SEPARATOR . 'autoload.php';
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'source', __DIR__)
-                . DIRECTORY_SEPARATOR . 'IOExcel.php';
+                . DIRECTORY_SEPARATOR . 'InputOutputExcel.php';
     }
 
     /**
@@ -44,7 +44,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelNoParameters()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([]);
     }
 
@@ -53,7 +53,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersNoFileName()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Properties' => [
                 'Creator' => 'PHPunit test'
@@ -66,7 +66,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersFileNameNotString()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Filename' => [],
         ]);
@@ -77,7 +77,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNotArray()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => 1,
@@ -89,7 +89,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNoName()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
@@ -115,7 +115,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNameNotString()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
@@ -142,7 +142,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNoContent()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
@@ -158,7 +158,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsContentNotArray()
     {
-        $mock = $this->getMockForTrait(IOExcel::class);
+        $mock = $this->getMockForTrait(InputOutputExcel::class);
         $mock->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
@@ -172,7 +172,7 @@ class IOExcelTest extends \PHPUnit\Framework\TestCase
 
     public function testSetArrayToExcel()
     {
-        $mock                = $this->getMockForTrait(IOExcel::class);
+        $mock                = $this->getMockForTrait(InputOutputExcel::class);
         $strFileNameWithPath = str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', '', __DIR__)
                 . DIRECTORY_SEPARATOR . 'test_results.xlsx';
         $mock->setArrayToExcel([

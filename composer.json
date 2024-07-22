@@ -14,7 +14,8 @@
         "php": "^5.4 || ^5.5 || ^5.6 || ^7.0 || ^7.1 || ^7.2 || ^7.3 || ^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3",
         "ext-json": "*",
         "matomo/device-detector": "*",
-        "symfony/http-foundation": ">=7"
+        "phpoffice/phpspreadsheet": "~2",
+        "symfony/http-foundation": "~7"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.4"
@@ -33,6 +34,7 @@
             "source/InputOutputBrowserAgent.php",
             "source/InputOutputCurl.php",
             "source/InputOutputDatabases.php",
+            "source/InputOutputExcel.php" 
             "source/InputOutputFilePermissions.php",
             "source/InputOutputFiles.php",
             "source/InputOutputMemory.php",

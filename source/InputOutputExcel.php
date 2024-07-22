@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2023 Daniel Popiniuc
+ * Copyright (c) 2015 - 2024 Daniel Popiniuc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +26,14 @@
  *
  */
 
-namespace danielgp\IOExcel;
+namespace danielgp\io_operations;
 
 /**
- * Description of IOExcel
+ * Description of InputOutputExcel
  *
  * @author Daniel Popiniuc
  */
-trait IOExcel
+trait InputOutputExcel
 {
 
     private $objPHPExcel;
