@@ -267,7 +267,7 @@ trait InputOutputExcel
         $strRegExpr    = '/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}'
             . '([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}'
             . '(:\d{1,2})?)?$/iu';
-        $strDateFormat = \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDD2;
+        $strDateFormat = \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDD;
         foreach ($inputs['RowValues'] as $key2 => $value2) {
             $crCol       = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
             $this->objPHPExcel
