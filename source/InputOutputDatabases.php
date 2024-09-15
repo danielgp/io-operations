@@ -157,12 +157,26 @@ trait InputOutputDatabases
             $stmt->execute();
             if (substr($strQuery, 0, 7) === 'INSERT ') {
                 $this->exposeDebugText('INSERT detected');
-                $result = $this->objConnection->lastInsertId();
-                $this->exposeDebugText('Last insert ID: ' . $result);
-                if ($result === 0) {
-                    $result = [
-                        'rowsAffected' => $stmt->rowCount(),
-                    ];
+                $result            = $this->objConnection->lastInsertId();
+                $intLastInsertId   = $this->objConnection->lastInsertId();
+                $this->exposeDebugText('Last insert ID: ' . $intLastInsertId);
+                $arrayRowsAffected = [];
+                $result            = [
+                    'lastInsertId' => $intLastInsertId,
+                    'rowsAffected' => 0,
+                ];
+                switch ($result) {
+                    case '0':
+                        $arrayRowsAffected      = [
+                            'rowsAffected' => 0,
+                        ];
+                        break;
+                    default:
+                        $arrayRowsAffected      = [
+                            'rowsAffected' => $stmt->rowCount(),
+                        ];
+                        $result['rowsAffected'] = $stmt->rowCount();
+                        break;
                 }
                 $this->exposeDebugText('Rows affected: ' . $this->getResultsAsJson($stmt->rowCount()));
             } elseif ((substr($strQuery, 0, 7) === 'UPDATE ') || (substr($strQuery, 0, 5) === 'CALL ')) {
