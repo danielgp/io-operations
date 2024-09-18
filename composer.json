@@ -37,6 +37,7 @@
             "source/InputOutputExcel.php",
             "source/InputOutputFilePermissions.php",
             "source/InputOutputFiles.php",
+            "source/InputOutputHardware.php",
             "source/InputOutputMemory.php",
             "source/InputOutputNetworkComponents.php",
             "source/InputOutputOperations.php",

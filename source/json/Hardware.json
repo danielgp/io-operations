@@ -1,0 +1,11 @@
+{
+    "Windows": {
+        "BIOS": "wmic BIOS get Manufacturer,Name,SMBIOSBIOSVersion,Version /value",
+        "CPU": "wmic CPU get Name,Manufacturer,NumberOfCores,NumberOfLogicalProcessors /value",
+        "Physical Drives": "wmic diskdrive get Name,InterfaceType,Manufacturer,MediaType,Model,SerialNumber,Size,Status /value",
+        "Network Card": "wmic nicconfig where \"MACAddress is not Null\" get Description,ServiceName /value",
+        "OS": "wmic os get Caption,Manufacturer,Name,OperatingSystemSKU,OSArchitecture,Version,FreePhysicalMemory,FreeVirtualMemory,FreeSpaceInPagingFiles,InstallDate,CSName /value",
+        "Printer": "wmic printer list full",
+        "Video": "wmic path Win32_VideoController get Name /value"
+    }
+}
