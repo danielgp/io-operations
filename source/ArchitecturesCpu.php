@@ -157,7 +157,7 @@ trait ArchiecturesCpu
     }
 
     /**
-     * Holds a list of Known CPU Srchitectures as array
+     * Holds a list of Known CPU architectures as array
      *
      * @return array
      */
