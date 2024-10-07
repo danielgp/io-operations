@@ -34,9 +34,9 @@ trait InputOutputNetworkComponents
     /**
      * Determines if a given IP is with a defined range
      *
-     * @param ipv4 $ipGiven
-     * @param ipv4 $ipStart
-     * @param ipv4 $ipEnd
+     * @param $ipGiven
+     * @param $ipStart
+     * @param $ipEnd
      * @return string
      */
     public function checkIpIsInRange($ipGiven, $ipStart, $ipEnd)
@@ -56,7 +56,7 @@ trait InputOutputNetworkComponents
     /**
      * Checks if given IP is a private or public one
      *
-     * @param ipv4 $ipGiven
+     * @param $ipGiven
      * @return string
      */
     public function checkIpIsPrivate($ipGiven)
@@ -73,7 +73,7 @@ trait InputOutputNetworkComponents
     /**
      * Checks if given IP is a V4 or V6
      *
-     * @param ipv4 $ipGiven
+     * @param $ipGiven
      * @return string
      */
     public function checkIpIsV4OrV6($ipGiven)
@@ -91,7 +91,7 @@ trait InputOutputNetworkComponents
     /**
      * Converts IP to a number
      *
-     * @param type $ipGiven
+     * @param $ipGiven
      * @return string|int
      */
     public function convertIpToNumber($ipGiven)

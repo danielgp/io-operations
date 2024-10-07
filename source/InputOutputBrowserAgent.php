@@ -165,7 +165,7 @@ trait InputOutputBrowserAgent
     /**
      * Returns client device details from client browser
      *
-     * @param class $deviceDetectorClass
+     * @param \DeviceDetector\DeviceDetector $deviceDetectorClass
      * @return array
      */
     private function getClientBrowserDevice(\DeviceDetector\DeviceDetector $deviceDetectorClass)
@@ -193,7 +193,7 @@ trait InputOutputBrowserAgent
     /**
      * Returns client operating system details from client browser
      *
-     * @param class $deviceDetectorClass
+     * @param \DeviceDetector\DeviceDetector $deviceDetectorClass
      * @param string $userAgent
      * @return array
      */
