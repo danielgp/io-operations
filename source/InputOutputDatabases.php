@@ -30,7 +30,7 @@ trait InputOutputDatabases
 {
 
     public $strErrorText            = null;
-    private $arrayConnectionDetails = false;
+    private $arrayConnectionDetails = [];
     private $bolDebugText           = false;
     private $objConnection          = null;
 
