@@ -75,6 +75,17 @@ trait InputOutputTiming
         return $objTimestamp->format($arrayInputs['TargetFormat']);
     }
 
+    public function convertTimeZoneInternational(array $arrayInputs): string
+    {
+        $srcTz        = new \DateTimeZone($arrayInputs['SourceTimeZone']);
+        $objTimestamp = \DateTime::createFromFormat($arrayInputs['SourceFormat'], $arrayInputs['Value'], $srcTz);
+        $objFormat    = new \IntlDateFormatter($arrayInputs['TargetLocale'],
+            \IntlDateFormatter::FULL, \IntlDateFormatter::FULL,
+            $arrayInputs['TargetTimeZone'], \IntlDateFormatter::GREGORIAN,
+            $arrayInputs['TargetFormat']);
+        return $objFormat->format($objTimestamp);
+    }
+
     public function getTimestampArray($crtTime)
     {
         return [
