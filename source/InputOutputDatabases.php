@@ -82,7 +82,9 @@ trait InputOutputDatabases
             $this->exposeDebugText('Database connection established: '
                 . $this->getResultsAsJson($this->objConnection));
         } catch (\RuntimeException $e) {
-            http_response_code(403);
+            if (!headers_sent()) {
+                http_response_code(403);
+            }
             $this->strErrorText = vsprintf('Conectarea la [%s] a întâmpinat o eroare'
                 . ', detaliile sunt după cum urmează: %s', [
                 $strDatabaseType,
@@ -132,12 +134,16 @@ trait InputOutputDatabases
     {
         $strReturn = $arrayResult;
         if (is_null($arrayResult)) {
-            http_response_code(403);
+            if (!headers_sent()) {
+                http_response_code(403);
+            }
             $this->strErrorText = 'NU există date pe server cu valorile introduse!';
             $this->exposeDebugText('No data (NULL): ' . $this->strErrorText);
         } elseif (is_array($arrayResult)) {
             if ($arrayResult == []) {
-                http_response_code(403);
+                if (!headers_sent()) {
+                    http_response_code(403);
+                }
                 $this->strErrorText = 'NU există date pe server cu valorile introduse!';
                 $this->exposeDebugText('Empty results: ' . $this->strErrorText);
             }
@@ -191,7 +197,9 @@ trait InputOutputDatabases
             $this->exposeDebugText('Return after verification:' . $this->getResultsAsJson($objReturn));
             return $objReturn;
         } catch (\PDOException $e) {
-            http_response_code(403);
+            if (!headers_sent()) {
+                http_response_code(403);
+            }
             $this->strErrorText = vsprintf('Eroare întâlnită, mesajul de la serverul de date este [%s]', [
                 $e->getMessage(),
             ]);
