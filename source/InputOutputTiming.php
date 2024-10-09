@@ -28,6 +28,7 @@ namespace danielgp\io_operations;
 
 trait InputOutputTiming
 {
+
     use InputOutputMemory;
 
     public $intTimeCounter = 0;
@@ -50,7 +51,7 @@ trait InputOutputTiming
         $tmpDateTimeIn = \DateTime::createFromFormat(\DATE_ATOM, $inStrictIso8601DtTm);
         if ($tmpDateTimeIn === false) {
             throw new \RuntimeException(''
-                . sprintf('Unable to create DateTime object from %s string!', $inStrictIso8601DtTm));
+                    . sprintf('Unable to create DateTime object from %s string!', $inStrictIso8601DtTm));
         }
         return $tmpDateTimeIn;
     }
@@ -64,6 +65,14 @@ trait InputOutputTiming
             ((int) $dateTime->format('s')),
         ]);
         return floatval($seconds . '.' . $dateTime->format('u'));
+    }
+
+    public function convertTimeZoneFlexible(array $arrayInputs): string
+    {
+        $srcTimeZone  = new \DateTimeZone($arrayInputs['SourceTimeZone']);
+        $objTimestamp = \DateTime::createFromFormat($arrayInputs['SourceFormat'], $arrayInputs['Value'], $srcTimeZone);
+        $objTimestamp->setTimezone(new \DateTimeZone($arrayInputs['TargetTimeZone']));
+        return $objTimestamp->format($arrayInputs['TargetFormat']);
     }
 
     public function getTimestampArray($crtTime)
