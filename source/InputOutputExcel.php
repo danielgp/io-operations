@@ -45,7 +45,8 @@ trait InputOutputExcel
      * @param array $check Checking messages
      * @return array|string[]
      */
-    private function checkInputFeatureContent($inFeaturesWorksheets, $check) {
+    private function checkInputFeatureContent($inFeaturesWorksheets, $check)
+    {
         $aReturn = [];
         foreach ($inFeaturesWorksheets as $key => $value) {
             if (!array_key_exists('Name', $value)) {
@@ -68,7 +69,8 @@ trait InputOutputExcel
      * @param array $inFeatures Predefined array of attributes
      * @return array|string[]
      */
-    private function checkInputFeatures(array $inFeatures) {
+    private function checkInputFeatures(array $inFeatures)
+    {
         $aReturn = [];
         $check   = $this->internalCheckingErrorMessages();
         if ($inFeatures === []) {
@@ -94,7 +96,8 @@ trait InputOutputExcel
         }
     }
 
-    public function internalCheckingErrorMessages() {
+    public function internalCheckingErrorMessages()
+    {
         return [
             '1'   => 'Check 1: Missing parameters!',
             '2'   => 'Check 2: No filename provided!',
@@ -113,7 +116,8 @@ trait InputOutputExcel
      *
      * @param array $inFeatures Predefined array of attributes
      */
-    public function setArrayToExcel(array $inFeatures) {
+    public function setArrayToExcel(array $inFeatures)
+    {
         $this->checkInputFeatures($inFeatures);
         $this->objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         if (isset($inFeatures['Properties'])) {
@@ -197,7 +201,8 @@ trait InputOutputExcel
      *
      * @param array $inputs
      */
-    private function setExcelHeaderCellContent(array $inputs) {
+    private function setExcelHeaderCellContent(array $inputs)
+    {
         $columnCounter = $inputs['StartingColumnIndex'];
         foreach ($inputs['RowValues'] as $value2) {
             $crtCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCounter);
@@ -238,7 +243,8 @@ trait InputOutputExcel
      *
      * @param array $inProperties
      */
-    private function setExcelProperties(array $inProperties) {
+    private function setExcelProperties(array $inProperties)
+    {
         if (array_key_exists('Creator', $inProperties)) {
             $this->objPHPExcel->getProperties()->setCreator($inProperties['Creator']);
         }
@@ -261,7 +267,8 @@ trait InputOutputExcel
      *
      * @param array $inputs
      */
-    private function setExcelRowCellContent(array $inputs) {
+    private function setExcelRowCellContent(array $inputs)
+    {
         $clsDate       = new \PhpOffice\PhpSpreadsheet\Shared\Date();
         $columnCounter = $inputs['StartingColumnIndex'];
         $strRegExpr    = '/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}'
@@ -303,7 +310,7 @@ trait InputOutputExcel
                 if (array_key_exists('WrapText', $inputs) && in_array($key2, $inputs['WrapText'])) {
                     $this->objPHPExcel
                         ->getActiveSheet()
-                        ->getStyle($crtCellAddress)
+                        ->getStyle($crtCellAddr)
                         ->getAlignment()
                         ->setWrapText(true);
                 }
@@ -325,7 +332,8 @@ trait InputOutputExcel
      * sets the Pagination
      *
      */
-    private function setExcelWorksheetPagination() {
+    private function setExcelWorksheetPagination()
+    {
         $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation('portrait');
         $this->objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(9); //coresponding to A4
         $margin = 0.7 / 2.54; // margin is set in inches (0.7cm)
@@ -344,7 +352,8 @@ trait InputOutputExcel
      *
      * @param array $inputs
      */
-    private function setExcelWorksheetUsability($inputs) {
+    private function setExcelWorksheetUsability($inputs)
+    {
         // repeat coloumn headings for every new page...
         $this->objPHPExcel
             ->getActiveSheet()
@@ -367,7 +376,8 @@ trait InputOutputExcel
             ->freezePane('A' . ($inputs['HeaderRowIndex'] + 1));
     }
 
-    private function setForcedHeadersWhenNotCli($strFileName) {
+    private function setForcedHeadersWhenNotCli($strFileName)
+    {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Pragma: private');
         header('Cache-control: private, must-revalidate');
@@ -381,7 +391,8 @@ trait InputOutputExcel
      * @param string $intRsqlTime
      * @return string
      */
-    private function setLocalTime2Seconds($intRsqlTime) {
+    private function setLocalTime2Seconds($intRsqlTime)
+    {
         $sign = '';
         if (is_null($intRsqlTime) || ($intRsqlTime == '')) {
             $intRsqlTime = '00:00:00';
