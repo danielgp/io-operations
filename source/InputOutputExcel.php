@@ -164,7 +164,7 @@ trait InputOutputExcel
             }
         }
         $this->objPHPExcel->setActiveSheetIndex(0);
-        $inFeatures['Filename'] = filter_var($inFeatures['Filename'], FILTER_SANITIZE_STRING);
+        $inFeatures['Filename'] = preg_replace('/[^a-zA-Z0-9_\.-]/', '', $inFeatures['Filename']);
         $bolForceSave           = false;
         if (array_key_exists('ForceSave', $inFeatures)) {
             $bolForceSave = $inFeatures['ForceSave'];
