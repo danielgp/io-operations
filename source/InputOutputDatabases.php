@@ -215,4 +215,48 @@ trait InputOutputDatabases
         }
         return $sReturn;
     }
+
+    public function setBatchDataIntoDatabase(string $strQuery, array $arrayDataToWrite, string $strWhich)
+    {
+        if (is_null($this->objConnection)) {
+            return null;
+        }
+        $arrayParameterValues = [];
+        try {
+            $stmt            = $this->objConnection->prepare($strQuery);
+            $intRowsAffected = 0;
+            foreach ($arrayDataToWrite as $intLine => $arrayValues) {
+                $arrayParameterValues = [];
+                foreach ($arrayValues as $strFieldName => $strValue) {
+                    $strFieldName = ':' . str_replace(' ', '_', $strFieldName);
+                    if ($strValue == 'NULL') {
+                        $strValue = null;
+                    }
+                    $stmt->bindValue($strFieldName, $strValue);
+                    $arrayParameterValues[$strFieldName] = chr(39) . $strValue . chr(39);
+                }
+                $stmt->execute();
+                $intRowsAffected += $stmt->rowCount();
+            }
+            $this->exposeDebugText('Number of rows affected: ' . $intRowsAffected);
+            $stmt->closeCursor();
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $this->exposeDebugText('Unique constraint case: ' . $e->getMessage());
+            } else {
+                if (!headers_sent()) {
+                    http_response_code(403);
+                }
+                $this->strErrorText = vsprintf('Error %s encoutered, message is [%s]', [
+                    $e->getCode(),
+                    $e->getMessage(),
+                ]);
+                $this->exposeDebugText('After Query execution: ' . $this->strErrorText);
+                error_log('Parametrized query: ' . $strQuery);
+                error_log('After Query execution: ' . $this->strErrorText);
+                error_log('Attempted parameters: ' . json_encode($arrayParameterValues));
+                error_log('Attempted query: ' . str_replace(array_keys($arrayParameterValues), array_values($arrayParameterValues), $strQuery));
+            }
+        }
+    }
 }
