@@ -259,4 +259,19 @@ trait InputOutputDatabases
             }
         }
     }
+
+    public function setQueryWithoutAnyReturnExpected(string $strQuery): void
+    {
+        if (!is_null($this->objConnection)) {
+            try {
+                $this->objConnection->exec($strQuery);
+            } catch (\PDOException $e) {
+                $this->strErrorText = vsprintf('Error %s encoutered, message is [%s]', [
+                    $e->getCode(),
+                    $e->getMessage(),
+                ]);
+                $this->exposeDebugText('After Query execution: ' . $this->strErrorText);
+            }
+        }
+    }
 }
