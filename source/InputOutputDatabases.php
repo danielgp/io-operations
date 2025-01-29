@@ -207,7 +207,7 @@ trait InputOutputDatabases
         }
     }
 
-    public function getStoredQuery($objClass, $label, $given_parameters = null)
+    public function getStoredQuery($objClass, $label, $given_parameters = null): string
     {
         $sReturn = call_user_func_array([$objClass, 'setRightQuery'], [$label, $given_parameters]);
         if ($sReturn === false) {
