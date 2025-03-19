@@ -223,6 +223,7 @@ trait InputOutputDatabases
         }
         $arrayParameterValues = [];
         try {
+            $this->objConnection->beginTransaction();
             $stmt            = $this->objConnection->prepare($strQuery);
             $intRowsAffected = 0;
             foreach ($arrayDataToWrite as $intLine => $arrayValues) {
@@ -240,10 +241,12 @@ trait InputOutputDatabases
             }
             $this->exposeDebugText('Number of rows affected: ' . $intRowsAffected);
             $stmt->closeCursor();
+            $this->objConnection->commit();
         } catch (\PDOException $e) {
             if ($e->getCode() == 23000) {
                 $this->exposeDebugText('Unique constraint case: ' . $e->getMessage());
             } else {
+                $this->objConnection->rollBack();
                 if (!headers_sent()) {
                     http_response_code(403);
                 }
