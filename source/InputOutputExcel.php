@@ -169,20 +169,19 @@ trait InputOutputExcel
         if (array_key_exists('ForceSave', $inFeatures)) {
             $bolForceSave = $inFeatures['ForceSave'];
         }
-        if (array_key_exists('FileFormat', $inFeatures)) {
-            switch ($inFeatures['FileFormat']) {
-                case 'Excel2007':
-                default:
-                    $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($this->objPHPExcel);
-                    break;
-                case 'Excel97-2003':
-                    $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xls($this->objPHPExcel);
-                    break;
-            }
-        } else {
-            $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($this->objPHPExcel);
+        if (!array_key_exists('FileFormat', $inFeatures)) {
+            $inFeatures['FileFormat'] = 'Excel2007';
         }
-        if ($bolForceSave || in_array(PHP_SAPI, ['cli', 'cli-server'])) {
+        switch ($inFeatures['FileFormat']) {
+            case 'Excel2007':
+            default:
+                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->objPHPExcel, 'Xlsx');
+                break;
+            case 'Excel97-2003':
+                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->objPHPExcel, 'Xls');
+                break;
+        }
+        if ($bolForceSave) {
             $strFileNamePath = '';
             if (array_key_exists('FilePath', $inFeatures)) {
                 $strFileNamePath = $inFeatures['FilePath'];
