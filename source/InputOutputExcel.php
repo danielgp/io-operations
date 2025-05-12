@@ -282,7 +282,7 @@ trait InputOutputExcel
                 ->getColumnDimension($crCol)
                 ->setAutoSize(true);
             $crtCellAddr = $crCol . $inputs['CurrentRowIndex'];
-            $cntLen      = strlen($value2);
+            $cntLen      = (is_null($value2) ? 0 : strlen($value2));
             if (($value2 == '') || ($value2 == '00:00:00') || ($value2 == '0')) {
                 $value2 = '';
             } elseif (in_array($cntLen, [7, 8, 9]) && (($cntLen - strlen(str_replace(':', '', $value2))) == 2)) {
