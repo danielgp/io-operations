@@ -229,7 +229,7 @@ trait InputOutputDatabases
             foreach ($arrayDataToWrite as $intLine => $arrayValues) {
                 $arrayParameterValues = [];
                 foreach ($arrayValues as $strFieldName => $strValue) {
-                    $strFieldName = ':' . str_replace(' ', '_', $strFieldName);
+                    $strFieldName = ':' . str_replace([' ', '-'], '_', $strFieldName);
                     if ($strValue == 'NULL') {
                         $strValue = null;
                     }
