@@ -2,7 +2,7 @@
     "name": "danielgp/io-operations",
     "description": "to support various Input/Output operations",
     "type": "library",
-    "license": "MIT",
+    "license": "EPL-1.0",
     "authors": [
         {
             "name": "Daniel Popiniuc",
