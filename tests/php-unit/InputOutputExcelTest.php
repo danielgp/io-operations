@@ -15,7 +15,10 @@ namespace danielgp\io_operations;
 
 class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    use InputOutputExcel;
+    
+    #[\Override]
+    protected function setUp(): void
     {
         require_once str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', 'vendor', __DIR__)
             . DIRECTORY_SEPARATOR . 'autoload.php';
@@ -28,8 +31,7 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelNoParameters()
     {
-        $mock = $this->getMockForTrait(InputOutputExcel::class);
-        $mock->setArrayToExcel([]);
+        $this->setArrayToExcel([]);
     }
 
     /**
@@ -37,8 +39,7 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersNoFileName()
     {
-        $mock = $this->getMockForTrait(InputOutputExcel::class);
-        $mock->setArrayToExcel([
+        $this->setArrayToExcel([
             'Properties' => [
                 'Creator' => 'PHPunit test'
             ],
@@ -61,8 +62,7 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNotArray()
     {
-        $mock = $this->getMockForTrait(InputOutputExcel::class);
-        $mock->setArrayToExcel([
+        $this->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => 1,
         ]);
@@ -73,8 +73,7 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNoName()
     {
-        $mock = $this->getMockForTrait(InputOutputExcel::class);
-        $mock->setArrayToExcel([
+        $this->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
                 [
@@ -99,8 +98,7 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsNameNotString()
     {
-        $mock = $this->getMockForTrait(InputOutputExcel::class);
-        $mock->setArrayToExcel([
+        $this->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
                 [
@@ -142,8 +140,7 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArrayToExcelSomeParametersWorksheetsContentNotArray()
     {
-        $mock = $this->getMockForTrait(InputOutputExcel::class);
-        $mock->setArrayToExcel([
+        $this->setArrayToExcel([
             'Filename'   => 'test',
             'Worksheets' => [
                 [
@@ -156,10 +153,9 @@ class InputOutputExcelTest extends \PHPUnit\Framework\TestCase
 
     public function testSetArrayToExcel()
     {
-        $mock                = $this->getMockForTrait(InputOutputExcel::class);
         $strFileNameWithPath = str_replace('tests' . DIRECTORY_SEPARATOR . 'php-unit', '', __DIR__)
             . DIRECTORY_SEPARATOR . 'test_results.xlsx';
-        $mock->setArrayToExcel([
+        $this->setArrayToExcel([
             'Filename'   => $strFileNameWithPath,
             'Worksheets' => [
                 [
