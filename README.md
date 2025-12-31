@@ -9,6 +9,22 @@ This repository is intended to ease Input Output operations from other PHP libra
 
 Repository owner is: [Daniel Popiniuc](mailto:danielpopiniuc@gmail.com)
 
+
+## Prerequisites
+
+* [Download Composer](https://getcomposer.org/download/)
+
+
+## Keeping updater up-to-date
+* `C:\www\AppForDeveloper\Composer\Latest\composer.bat self-update`
+
+
+## Keeping reference libraries up-to-date
+
+* `C:\www\AppForDeveloper\Composer\Latest\composer.bat install`
+* `C:\www\AppForDeveloper\Composer\Latest\composer.bat update`
+
+
 Packagist statistics by poser.pugx.org
 [![License](https://poser.pugx.org/danielgp/io-operations/license)](https://packagist.org/packages/danielgp/io-operations)
 [![Latest Stable Version](https://poser.pugx.org/danielgp/io-operations/v/stable)](https://packagist.org/packages/danielgp/io-operations)

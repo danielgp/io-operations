@@ -32,7 +32,9 @@ trait InputOutputCurl
         if (array_key_exists('NoBody', $features)) {
             unset($aReturn['response']);
         }
-        curl_close($chanel);
+        if (PHP_VERSION_ID < 80500) {
+            curl_close($chanel);
+        }
         return $aReturn;
     }
 

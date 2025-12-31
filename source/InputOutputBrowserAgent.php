@@ -196,7 +196,9 @@ trait InputOutputBrowserAgent
     private function getClientBrowserVersion(\DeviceDetector\DeviceDetector $deviceDetectorClass)
     {
         $clientDetails = $deviceDetectorClass->getClient();
-        if (isset($clientDetails['version']) && (strpos($clientDetails['version'], '.') !== false)) {
+        if (is_array($clientDetails) 
+                && array_key_exists('version', $clientDetails)
+                && !str_contains($clientDetails['version'], '.')) {
             $vrs                            = explode('.', $clientDetails['version']);
             $clientDetails['version_major'] = $vrs[0];
             $clientDetails['version_minor'] = $vrs[1];
