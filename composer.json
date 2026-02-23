@@ -13,12 +13,12 @@
     "require": {
         "php":                      "^8.4 || ^8.5",
         "ext-json":                 "*",
-        "matomo/device-detector":   "~6.4",
-        "phpoffice/phpspreadsheet": "~5.3",
+        "matomo/device-detector":   "~6.5",
+        "phpoffice/phpspreadsheet": "~5.4",
         "symfony/http-foundation":  "~8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^12.5"
+        "phpunit/phpunit": "^13"
     },
     "config": {
         "platform": {
