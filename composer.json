@@ -14,7 +14,7 @@
         "php":                      "^8.4 || ^8.5",
         "ext-json":                 "*",
         "matomo/device-detector":   "~6.5",
-        "phpoffice/phpspreadsheet": "~5.4",
+        "phpoffice/phpspreadsheet": "~5.7",
         "symfony/http-foundation":  "~8.0"
     },
     "require-dev": {
